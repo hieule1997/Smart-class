@@ -130,6 +130,7 @@ $(document).ready(function(){
                 $("#khung .nd_dap_an").each(function(){
                     $(this).val("");
                 });
+                table_question.ajax.reload(null, false);
             },
         });
     });
@@ -137,7 +138,7 @@ $(document).ready(function(){
     var table_question = $("#list_question").DataTable({
         "ajax": {
             "type": "GET",
-            "url": "/question_data_" + $("#gv_mon option:selected").val(),
+            "url": "/question_data_" + $("#gv_mon option:selected").val() +"_0",
             "contentType": "application/json; charset=utf-8",
             "data": function(result){
                 return JSON.stringify(result);
@@ -149,7 +150,7 @@ $(document).ready(function(){
     });
 
     $("#gv_mon").on('change', function(){
-        table_question.ajax.url("/question_data_" + $("#gv_mon option:selected").val()).load();
+        table_question.ajax.url("/question_data_" + $("#gv_mon option:selected").val()+"_0").load();
     });
 
     $('#list_question tbody').on( 'click', 'tr', function () {
@@ -291,7 +292,7 @@ $(document).ready(function(){
              'nd_dap_an':JSON.stringify(nd_dap_an), 'edit':''},
             success : function(){
                 $("#question").modal('hide');
-                table_question.ajax.reload(null, false)
+                table_question.ajax.reload(null, false);
             },
         });
     });

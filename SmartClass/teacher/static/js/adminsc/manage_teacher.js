@@ -250,7 +250,6 @@ $(document).ready(function(){
     else input_dom_element.addEventListener('change', handler, false);
 
     $('#create_new_teacher_multi').click(function(){
-//        console.log(typeof result);
         var token = $("input[name=csrfmiddlewaretoken]").val();
         if (typeof result != 'undefined' ){
             $.ajax({

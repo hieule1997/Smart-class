@@ -28,22 +28,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
                             <div class="x_panel">
                                 <div class="x_title">
-                                  <h2>Form Wizards <small>Sessions</small></h2>
-                                  <ul class="nav navbar-right panel_toolbox">
-                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                    </li>
-                                    <li class="dropdown">
-                                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                      <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                      </ul>
-                                    </li>
-                                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                    </li>
-                                  </ul>
+                                  <h2>Đề thi</h2>
                                   <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
@@ -64,118 +49,130 @@
                                           <span class="step_no">2</span>
                                           <span class="step_descr">
                                                             Bước 2<br />
-                                                            <small>Chọn câu hỏi</small>
-                                                        </span>
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <a href="#step-3">
-                                          <span class="step_no">3</span>
-                                          <span class="step_descr">
-                                                            Bước 3<br />
-                                                            <small>Hoàn thiện</small>
+                                                            <small>Chọn câu hỏi & lưu</small>
                                                         </span>
                                         </a>
                                       </li>
                                     </ul>
                                     <div id="step-1">
-                                      <form class="form-horizontal form-label-left">
-
-                                        <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">First Name <span class="required">*</span>
-                                          </label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Last Name <span class="required">*</span>
-                                          </label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" id="last-name" name="last-name" required="required" class="form-control col-md-7 col-xs-12">
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Middle Name / Initial</label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="middle-name">
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Gender</label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <div id="gender" class="btn-group" data-toggle="buttons">
-                                              <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                                <input type="radio" name="gender" value="male"> &nbsp; Male &nbsp;
+                                        <form class="form-horizontal form-label-left">
+                                             <div class="form-group">
+                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Chọn môn</label>
+                                                 <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <select class="form-control" id="gv_mon">
+                                                        {% for mon in list_mon %}
+                                                        <option value="{{ mon.mon_id.id }}">{{ mon.mon_id.ten }} - {{mon.mon_id.lop}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                 </div>
+                                             </div>
+                                            <div class="form-group">
+                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên đề</label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" class="form-control" name="ten_de">
+                                                </div>
+                                             </div>
+                                            <div class="form-group">
+                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Chọn loại đề</label>
+                                                 <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <select class="form-control" id="loai_de">
+                                                        <option value="kiểm tra 15'">Kiểm tra 15'</option>
+                                                        <option value="kiểm tra 1 tiết">Kiểm tra 1 tiết</option>
+                                                        <option value="thi">Thi</option>
+                                                    </select>
+                                                 </div>
+                                             </div>
+                                            <div class="form-group" id="loai_cau_hoi">
+                                              <label class="control-label col-md-3 col-sm-3 col-xs-12">Loại câu hỏi
                                               </label>
-                                              <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                                                <input type="radio" name="gender" value="female"> Female
-                                              </label>
+                                              <div class="col-md-3 col-sm-3 col-xs-12">
+                                                  <input type="checkbox" style="transform: scale(1.4);" id="ck_tn"> Trắc nhiệm </p>
+                                                <input type="checkbox" style="transform: scale(1.4);" id="ck_dt"> Điền từ vào chỗ trống </p>
+                                                <input type="checkbox" style="transform: scale(1.4);" id="ck_tl"> Tự luận </p>
+                                              </div>
                                             </div>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Of Birth <span class="required">*</span>
-                                          </label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input id="birthday" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text">
-                                          </div>
-                                        </div>
+                                            <div class="form-group" id="sl_tn">
 
-                                      </form>
+                                            </div>
+                                            <div class="form-group" id="sl_dt">
 
+                                            </div>
+                                            <div class="form-group" id="sl_tl">
+
+                                            </div>
+                                        </form>
                                     </div>
                                     <div id="step-2">
-                                      <h2 class="StepTitle">Step 2 Content</h2>
-                                      <p>
-                                        do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                      </p>
-                                      <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                                        in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                      </p>
-                                    </div>
-                                    <div id="step-3">
-                                      <h2 class="StepTitle">Step 3 Content</h2>
-                                      <p>
-                                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                                        eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                      </p>
-                                      <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                                        in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                      </p>
+                                      <div class="row">
+                                          <div class="col-md-3 col-sm-3 col-xs-12">
+                                              <div class="x_panel">
+                                                <div class="x_title">
+                                                    <h2>Câu hỏi đã chọn  </h2>
+                                                    <h2 id="so_luong"></h2>
+                                                    <h2>/100</h2>
+                                                  <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="x_content">
+                                                    <table class="table table-striped jambo_table" id="list_ques_selected" width="100%">
+                                                        <thead>
+                                                          <tr>
+                                                            <th>Câu hỏi</th>
+                                                          </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-9 col-sm-9 col-xs-12">
+                                              <div class="x_panel">
+                                                <div class="x_title">
+                                                    <h2>Câu hỏi   </h2>
+                                                  <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="x_content">
+
+                                                  <div class="">
+                                                   <table class="table table-striped jambo_table" id="list_question" width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Chủ đề</th>
+                                                                <th>Dạng câu hỏi</th>
+                                                                <th>Độ khó</th>
+                                                                <th>Người tạo</th>
+                                                                <th>Ngày tạo</th>
+                                                                <th>Nội dung</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                     </div>
                                   </div>
-
                                 </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-                            <div class="x_title">
-                                <div class="col-md-9 col-sm-12 col-xs-12 form-group">
-                                    <h2>Câu hỏi đã tạo</h2>
-                                </div>
-                                <div class="col-md-3 col-sm-12 col-xs-12 form-group">
-                                    <select class="form-control" id="gv_mon">
-                                        {% for mon in list_mon %}
-                                        <option value="{{ mon.mon_id.id }}">{{ mon.mon_id.ten }} - {{mon.mon_id.lop}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
                             <div class="x_content">
                                 <div class="">
-                                    <table class="table table-striped jambo_table bulk_action" id="list_question" width="100%">
+                                    <table class="table table-striped jambo_table bulk_action" id="list_exam" width="100%">
                                         <thead>
                                             <tr>
-                                                <th>Chủ đề</th>
-                                                <th>Dạng câu hỏi</th>
-                                                <th>Độ khó</th>
+                                                <th>Môn</th>
+                                                <th>Tên đề</th>
+                                                <th>Loại đề</th>
                                                 <th>Ngày tạo</th>
-                                                <th>Nội dung</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -195,24 +192,44 @@
 </div>
 
 <div class="modal" id="question" role="dialog">
-      <div  class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title" id="question_title">Câu hỏi</h4>
-            </div>
-            <div class="modal-body" id="khung_modal">
-                {% csrf_token %}
-
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-primary" id="edit_question">Cập nhật</button>
-               <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-            </div>
+  <div  class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="question_title">Câu hỏi</h4>
         </div>
-      </div>
+        <div class="modal-body" id="khung_modal">
+            {% csrf_token %}
+
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-primary" id="select_question">Chọn</button>
+           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        </div>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="exam" role="dialog">
+  <div  class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="exam_title">Đề</h4>
+        </div>
+        <div class="modal-body" id="khung_exam">
+            {% csrf_token %}
+
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+        </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock content %}
 {% block javascripts %}
@@ -220,6 +237,7 @@
     <!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
     <!--<script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>-->
     <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+
     <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js' %}"></script>
     <script src="{% static 'js/teacher/manage_exam.js' %}"></script>
