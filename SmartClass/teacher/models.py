@@ -217,12 +217,13 @@ class BaiLamHocSinh(models.Model):
 
 
 class DiemSo(models.Model):
-    bai_lam_id = models.ForeignKey('BaiLamHocSinh', models.CASCADE, db_column='bai_lam_id', null=True)
+    de_id = models.ForeignKey('De', models.SET_NULL, null=True, db_column='de_id')
     myuser_id = models.ForeignKey('MyUser', models.CASCADE, db_column="myuser_id")
     ngay_lam = models.DateField(default=timezone.now)
     mon_id = models.ForeignKey('Mon', models.CASCADE, db_column='mon_id')
-    loai_diem = models.TextField()
-    diem = models.IntegerField()
+    loai_diem = models.CharField(max_length=255)
+    diem = models.FloatField()
+    bai_lam = models.TextField(null=True)
 
     class Meta:
         managed = True

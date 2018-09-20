@@ -166,16 +166,16 @@ def chi_tiet_de_data(request, id):
     if user.is_authenticated and user.position == 1:
         list_ques = ChiTietDe.objects.filter(de_id=id)
         content = ''
-        for i in range(len(list_ques)):
+        for i, ques in enumerate(list_ques):
             dap_an = '\n'
-            list_dap_an = DapAn.objects.filter(cau_hoi_id=list_ques[i].cau_hoi_id)
-            for k in range(len(list_dap_an)):
+            list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
+            for k, da in enumerate(list_dap_an):
                 s = chr(ord(str(k)) + 17)
-                if list_dap_an[k].dap_an_dung:
+                if da.dap_an_dung:
                     dung = '(Đúng)'
                 else:
                     dung = ''
-                dap_an += '{0}: {1}{2}\n'.format(s, list_dap_an[k].noi_dung, dung)
+                dap_an += '{0}: {1}{2}\n'.format(s, da.noi_dung, dung)
             content += '''
             <label>Câu hỏi {0}:</label>
             <pre style="white-space: pre-wrap;">{1}{2}</pre>

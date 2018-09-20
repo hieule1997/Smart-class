@@ -76,7 +76,7 @@ $(document).ready(function(){
                     var loai_de = $('#loai_de option:selected').val();
                     var list_ques = []
                     $('#list_ques_selected tbody tr').each(function(){
-                        list_ques.push($(this).find('p').first().data('id'));
+                        list_ques.push($(this).find('p').first().attr('id').split('_')[1]);
                     });
                     $.ajax({
                         'type':'POST',
@@ -96,8 +96,14 @@ $(document).ready(function(){
         "scrollCollapse": false,
     });
 
+    $("#gv_mon").on('change', function(){
+        table_question.ajax.url("/question_data_" + $("#gv_mon option:selected").val() +"_1").load();
+        table_ques_selected.clear().draw();
+    });
+
     $('#list_question tbody').on( 'click', 'tr', function () {
         var id = $(this).find('p').first().attr('id').split("_")[2];
+        $('#question_title').html('Câu hỏi #'+id);
         var tom_tat = $("#tom_tat_"+id).text();
         var dang_cau_hoi = $("#dang_cau_hoi_"+id).text();
         var noi_dung = $("#noi_dung_"+id).text();
@@ -107,7 +113,7 @@ $(document).ready(function(){
         $(".dap_an_"+id).each(function(){
             dap_an.push($(this).text());
             if ($(this).data("dung")=== "True"){
-                dung.push("checked");
+                dung.push("(Đúng)");
             }
             else{
                 dung.push("");
@@ -118,24 +124,11 @@ $(document).ready(function(){
             <input type="hidden" name="id" value="${id}">
             <input type="hidden" name="tom_tat" value="${tom_tat}">
             <label>Nội dung:</label>
-            <textarea class='form-control '  name="noi_dung" placeholder="Nhập nội dung" rows="10" disabled >${noi_dung}</textarea>
-            <br>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                    <input type="radio" class="form-control dap_an" name="dap_an" ${dung[0]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"  disabled >${dap_an[0]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[1]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"  disabled >${dap_an[1]}</textarea>
-                </div>
-            </div>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+            </pre>
             `;
         }
         else if (dang_cau_hoi.includes("3 đáp án")){
@@ -143,32 +136,12 @@ $(document).ready(function(){
             <input type="hidden" name="id" value="${id}">
             <input type="hidden" name="tom_tat" value="${tom_tat}">
             <label>Nội dung:</label>
-            <textarea  class='form-control ' name="noi_dung" placeholder="Nhập nội dung" rows="10"  disabled >${noi_dung}</textarea>
-            <br>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[0]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"  disabled >${dap_an[0]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[1]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"  disabled >${dap_an[1]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[2]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"  disabled >${dap_an[2]}</textarea>
-                </div>
-            </div>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+            </pre>
             `;
         }
         else{
@@ -176,44 +149,82 @@ $(document).ready(function(){
             <input type="hidden" name="id" value="${id}">
             <input type="hidden" name="tom_tat" value="${tom_tat}">
             <label>Nội dung:</label>
-            <textarea  class="form-control " name="noi_dung" placeholder="Nhập nội dung" rows="10"  disabled >${noi_dung}</textarea>
-            <br>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[0]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"  disabled >${dap_an[0]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[1]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"  disabled >${dap_an[1]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[2]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"  disabled >${dap_an[2]}</textarea>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an" ${dung[3]}  disabled >
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"  disabled >${dap_an[3]}</textarea>
-                </div>
-            </div>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+D:${dap_an[3]} ${dung[3]}
+            </pre>
             `;
         }
         $("#khung_modal").html(nd);
         $("#question").modal("show");
+        $("#select_question").show();
+        $("#remove_question").hide();
+    });
+
+    $('#list_ques_selected tbody').on( 'click', 'tr', function () {
+        var id = $(this).find('p').first().attr('id').split("_")[1];
+        $('#question_title').html('Câu hỏi #'+id);
+        var tom_tat = $("#tom_tat_"+id).text();
+        var dang_cau_hoi = $("#dang_cau_hoi_"+id).text();
+        var noi_dung = $("#noi_dung_"+id).text();
+        var dap_an = []
+        var dung = []
+        var nd ='';
+        $(".dap_an_"+id).each(function(){
+            dap_an.push($(this).text());
+            if ($(this).data("dung")=== "True"){
+                dung.push("(Đúng)");
+            }
+            else{
+                dung.push("");
+            }
+        });
+        if ( dang_cau_hoi.includes("Trắc nhiệm 2 đáp án")){
+            nd = `
+            <input type="hidden" name="id" value="${id}">
+            <input type="hidden" name="tom_tat" value="${tom_tat}">
+            <label>Nội dung:</label>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+            </pre>
+            `;
+        }
+        else if (dang_cau_hoi.includes("3 đáp án")){
+            nd += `
+            <input type="hidden" name="id" value="${id}">
+            <input type="hidden" name="tom_tat" value="${tom_tat}">
+            <label>Nội dung:</label>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+            </pre>
+            `;
+        }
+        else{
+            nd +=`
+            <input type="hidden" name="id" value="${id}">
+            <input type="hidden" name="tom_tat" value="${tom_tat}">
+            <label>Nội dung:</label>
+            <pre style="white-space: pre-wrap;" name="noi_dung">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+D:${dap_an[3]} ${dung[3]}
+            </pre>
+            `;
+        }
+        $("#khung_modal").html(nd);
+        $("#question").modal("show");
+        $("#select_question").hide();
+        $("#remove_question").show();
     });
 
     $('#select_question').on('click', function(){
@@ -222,9 +233,18 @@ $(document).ready(function(){
         var id = modal.find('input[name=id]').first().val();
         var tom_tat = modal.find('input[name=tom_tat]').first().val();
         var content = `
-            <p data-id="${id}">(${id})  ${tom_tat}</p>
+            <p id="ch_${id}">(${id})  ${tom_tat}</p>
         `
         table_ques_selected.row.add([content]).draw();
+        $("#so_luong").html(table_ques_selected.data().count());
+    })
+
+    $('#remove_question').on('click', function(){
+        $("#question").modal("hide");
+        var modal = $(this).parent().parent();
+        var id = modal.find('input[name=id]').first().val();
+        var row = $("#ch_"+id).parent().parent();
+        table_ques_selected.row(row).remove().draw();
         $("#so_luong").html(table_ques_selected.data().count());
     })
 
@@ -248,13 +268,69 @@ $(document).ready(function(){
         $.ajax({
             type:"GET",
             url:"/chi_tiet_de_data_" + id,
-            contentType: "application/json; charset=utf-8",
             success: function(data){
                 $("#khung_exam").html(data);
                 $("#exam").modal("show");
             },
         });
     });
+
+    function update_review(){
+        var content = '';
+        $('#list_ques_selected tbody tr').each(function(index){
+            var id = $(this).find('p').first().attr('id').split('_')[1];
+            var dang_cau_hoi = $("#dang_cau_hoi_"+id).text();
+            var noi_dung = $("#noi_dung_"+id).text();
+            var dap_an = []
+            var dung = []
+            var nd ='';
+            $(".dap_an_"+id).each(function(){
+                dap_an.push($(this).text());
+                if ($(this).data("dung")=== "True"){
+                    dung.push("(Đúng)");
+                }
+                else{
+                    dung.push("");
+                }
+            });
+            var i = index+1;
+            if ( dang_cau_hoi.includes("Trắc nhiệm 2 đáp án")){
+                content += `
+                <label>Câu hỏi ${i}:</label>
+                <pre style="white-space: pre-wrap;">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+                </pre>
+                `
+            }
+            else if (dang_cau_hoi.includes("Trắc nhiệm 3 đáp án")){
+                content += `
+                <label>Câu hỏi ${i}:</label>
+                <pre style="white-space: pre-wrap;">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+                </pre>
+                `
+            }else{
+            content += `
+                <label>Câu hỏi ${i}:</label>
+                <pre style="white-space: pre-wrap;">
+${noi_dung}
+A:${dap_an[0]} ${dung[0]}
+B:${dap_an[1]} ${dung[1]}
+C:${dap_an[2]} ${dung[2]}
+C:${dap_an[3]} ${dung[3]}
+                </pre>
+                `
+            }
+
+        });
+
+        $('#step-3').html(content);
+    }
 
 });
 

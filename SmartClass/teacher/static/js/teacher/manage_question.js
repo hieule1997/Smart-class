@@ -9,7 +9,7 @@ $(document).ready(function(){
             <br>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                    <input type="radio" class="form-control dap_an" name="dap_an">
+                    <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>
@@ -17,7 +17,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>
@@ -32,7 +32,7 @@ $(document).ready(function(){
             <br>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>
@@ -40,7 +40,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>
@@ -48,7 +48,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>
@@ -63,7 +63,7 @@ $(document).ready(function(){
             <br>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>
@@ -71,7 +71,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>
@@ -79,7 +79,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>
@@ -87,7 +87,7 @@ $(document).ready(function(){
             </div>
             <div class="row">
                 <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" name="dap_an">
+                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                 </div>
                 <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                   <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>

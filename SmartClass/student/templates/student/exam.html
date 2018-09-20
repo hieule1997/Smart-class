@@ -1,0 +1,39 @@
+{% extends "student/base.html" %}
+{% load static %}
+{% block title %} Inbox {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+    <!-- bootstrap-wysiwyg -->
+    <!--<link href="{% static 'css/chat.css' %}" rel="stylesheet">-->
+{% endblock stylesheets %}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>Thực hành</h2>
+                <button class="btn btn-primary" style="float:right;" id="submit">Nộp bài <i class="fa fa-send"></i> </button>
+                <button class="btn btn-primary" style="float:right;" id="thi">Thi <i class="fa fa-send"></i> </button>
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <div class="row" id="de_thi">
+                <h2>Hiện tại không có kỳ thi nào</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <script src="{% static 'js/student/exam.js' %}"></script>
+{% endblock javascripts %}
