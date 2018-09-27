@@ -4,7 +4,14 @@ html , body{
  height:100%;
 
 }
-
+.mail_list a span
+{
+    float: right;
+}
+.showde{
+    overflow-y: scroll;
+    height: -webkit-fill-available;
+}
 .full-width {
 
  width:100%;
@@ -14,7 +21,12 @@ html , body{
 .full-height{
  height:100%;
  }
-
+.macro{
+    width: 90% !important;
+}
+.msj-rta{
+    width: 91%;
+}
 .daterangepicker .ranges li {
     color: #73879C
 }
@@ -731,9 +743,9 @@ a:focus {
     text-decoration: none;
     background: transparent
 }
-/* .nav.child_menu {
+.nav.child_menu {
     display: none
-} */
+}
 .nav.child_menu li:hover,
 .nav.child_menu li.active {
     background-color: rgba(255, 255, 255, 0.06)

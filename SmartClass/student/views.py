@@ -36,7 +36,7 @@ class EmailThread(threading.Thread):
 def home(request):
     user = request.user
     if user.is_authenticated and user.position == 0:
-        content = {'mon': lop_mon(user)}
+        content = {'mon': lop_mon(user), 'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/base.html', content)
     else:
         return HttpResponseRedirect('/')
@@ -71,7 +71,7 @@ def user_profile(request):
                 else:
                     messages.warning(request, 'Mật khẩu không đúng')
             return HttpResponseRedirect("profile")
-        content = {'mon': lop_mon(user)}
+        content = {'mon': lop_mon(user), 'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/profile.html', content)
     else:
         return redirect("/")
@@ -80,7 +80,7 @@ def user_profile(request):
 def score(request):
     user = request.user
     if user.is_authenticated and user.position == 0:
-        content = {'mon': lop_mon(user)}
+        content = {'mon': lop_mon(user), 'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/score.html', content)
     else:
         return redirect("/")
@@ -95,7 +95,7 @@ def mon(request, id):
         ls_student = MyUser.objects.filter(id__in=ls_chi_tiet, position=0)
         ls_teacher = MyUser.objects.filter(id__in=ls_chi_tiet, position=1)
         teacher_ht = GiaoVienMon.objects.get(myuser_id__in=ls_teacher, mon_id=monOb)
-        content = {'mon': lop_mon(user), 'mon_ht': monOb, 'ls_student': ls_student, 'teacher_ht': teacher_ht}
+        content = {'lop': mark_safe(json.dumps(lopOb.lop_id.ten)),'mon': lop_mon(user), 'mon_ht': monOb, 'ls_student': ls_student, 'teacher_ht': teacher_ht, 'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/subjects.html', content)
     else:
         return redirect("/")
@@ -111,23 +111,23 @@ def score_data(request):
             if len(list_score) == 0:
                 continue
             mon_data = ' <a class="btn">{} - {}</a>'.format(mon.ten, mon.lop)
-            diem_ly_thuyet = ''
-            diem_thuc_hanh = ''
+            kiem_tra_15p = ''
+            kiem_tra_1_tiet = ''
             diem_thi = ''
             for diem in list_score:
                 if diem.loai_diem == "kiểm tra 15'":
-                    diem_ly_thuyet += '''
+                    kiem_tra_15p += '''
                         <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
                         '''.format(diem.id, diem.diem)
                 elif diem.loai_diem == 'kiểm tra 1 tiết':
-                    diem_thuc_hanh += '''
+                    kiem_tra_1_tiet += '''
                         <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
                         '''.format(diem.id, diem.diem)
                 elif diem.loai_diem == 'thi':
                     diem_thi += '''
                         <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
                         '''.format(diem.id, diem.diem)
-            data.append([mon_data, diem_ly_thuyet, diem_thuc_hanh, diem_thi])
+            data.append([mon_data, kiem_tra_15p, kiem_tra_1_tiet, diem_thi])
         big_data = {"data": data}
         json_data = json.loads(json.dumps(big_data))
         return JsonResponse(json_data)
@@ -194,6 +194,14 @@ def exam(request):
             bai_lam = ''
             for i, ch in enumerate(ChiTietDe.objects.filter(de_id=de)):
                 tempt = '\n'
+                media = ''
+                if "Hình ảnh" in ch.cau_hoi_id.dang_cau_hoi:
+                    media = '<img style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{}" alt="không tồn tại" /><br>'.format(
+                        ch.cau_hoi_id.dinh_kem)
+                elif "Âm thanh" in ch.cau_hoi_id.dang_cau_hoi:
+                    media = '<br><audio controls width="100%" src="/media/{}"></audio>'.format(ch.cau_hoi_id.dinh_kem)
+                elif "Video" in ch.cau_hoi_id.dang_cau_hoi:
+                    media = '<video controls width="100%" src="/media/{}"></video>'.format(ch.cau_hoi_id.dinh_kem)
                 for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ch.cau_hoi_id)):
                     s = chr(ord(str(k)) + 17)
                     dung = ''
@@ -208,12 +216,13 @@ def exam(request):
                     tempt += '{0}: {1}{2}\n'.format(s, da.noi_dung, dung)
                 bai_lam += '''
                 <label>Câu hỏi {0}:</label>
+                {3}
                 <pre style="white-space: pre-wrap;">{1}{2}</pre>
-                '''.format(i + 1, ch.cau_hoi_id.noi_dung, tempt)
+                '''.format(i + 1, ch.cau_hoi_id.noi_dung, tempt, media)
             DiemSo.objects.create(de_id=de, myuser_id=user, mon_id=de.mon_id, loai_diem=de.loai_de, bai_lam=bai_lam,
                                   diem=round(s_dung/ChiTietDe.objects.filter(de_id=de).count(), 3)*10)
         content = {'mon': lop_mon(user),
-                   'lop': ChiTietLop.objects.get(myuser_id=user),}
+                   'lop': ChiTietLop.objects.get(myuser_id=user)}
         return render(request, 'student/exam.html', content)
     else:
         return redirect("/")
@@ -234,6 +243,14 @@ def exam_data(request, id):
                 </a>
             </div>
             '''.format(i+1)
+            media = ''
+            if "Hình ảnh" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<img style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{}" alt="không tồn tại" /><br>'.format(
+                    ques.cau_hoi_id.dinh_kem)
+            elif "Âm thanh" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<br><audio controls width="100%" src="/media/{}"></audio>'.format(ques.cau_hoi_id.dinh_kem)
+            elif "Video" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<video controls width="100%" src="/media/{}"></video>'.format(ques.cau_hoi_id.dinh_kem)
             list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
             for k, da in enumerate(list_dap_an):
                 s = chr(ord(str(k)) + 17)
@@ -248,14 +265,15 @@ def exam_data(request, id):
             right_content += '''
                 <div id="cau_{0}">
                     <label>Câu hỏi {0}:</label>
+                    {3}
                     <pre style="white-space: pre-wrap;">{1}</pre>
                     {2}
                 </div>
             <div>
-            '''.format(i+1, list_ques[i].cau_hoi_id.noi_dung, dap_an)
+            '''.format(i+1, list_ques[i].cau_hoi_id.noi_dung, dap_an, media)
         content = '''
         <div class="col-sm-1 mail_list_column">{0}</div>
-        <div class="col-sm-11 mail_view">
+        <div class="col-sm-11 mail_view showde">
             <div class="inbox-body">{1}</div>
         <div>
         <input type="hidden" value="{2}" name="de_id">

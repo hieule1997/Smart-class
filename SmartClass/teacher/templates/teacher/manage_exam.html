@@ -118,7 +118,8 @@
                                                 <div class="x_title">
                                                     <h2>Câu hỏi đã chọn  </h2>
                                                     <h2 id="so_luong"></h2>
-                                                    <h2>/100</h2>
+                                                    <h2> / </h2>
+                                                    <h2 id="sl_max"></h2>
                                                   <div class="clearfix"></div>
                                                 </div>
 
@@ -242,7 +243,27 @@
     </div>
   </div>
 </div>
+<div class="modal" id="processing" role="dialog">
+  <div  class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
 
+        <div class="modal-header">
+            <div class="col-md-11 col-sm-12 col-xs-12">
+                <div class="progress" >
+                    <div id="progressBar" style="width:0%" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-sm-12 col-xs-12">
+                <button id="cancel_upload" class="btn-danger" style="border-radius:6px" data-dismiss="modal">
+                    <span class="fa fa-close"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
 {% block javascripts %}

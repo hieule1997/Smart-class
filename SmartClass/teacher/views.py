@@ -21,6 +21,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from teacher.models import *
+import os
+from django.conf import settings
 
 
 class EmailThread(threading.Thread):
@@ -96,34 +98,59 @@ def manage_point_data(request, lop):
             mon = Mon.objects.get(id__in=mon_id, lop=lp)
             for student in ls_student:
                 fullname = '<p id="full_{}">{}</p>'.format(student.id, student.fullname)
-                # if student.gioi_tinh == 0:
-                #     gioi_tinh = '<p id="gioi_{}">Nữ</p>'.format(student.id)
-                # else:
-                #     gioi_tinh = '<p id="gioi_{}">Nam</p>'.format(student.id)
-                diem_ly_thuyet = '<div class="row">'
-                diem_thuc_hanh = '<div class="row">'
+                kiem_tra_15p = '<div class="row">'
+                kiem_tra_1_tiet = '<div class="row">'
                 diem_thi = '<div class="row">'
                 for diem in DiemSo.objects.filter(myuser_id=student, mon_id=mon):
-                    if diem.loai_diem == 'lý thuyết':
-                        diem_ly_thuyet += '''
-                        <a class="btn" id="lt_{0}" data-toggle="modal" data-target="#point" data-student-id="{1}" data-ngay-lam="{2}" data-bai-lam="{3}">{4}</a>,
-                        '''.format(diem.id, student.id, str(diem.ngay_lam), "1+1=2", diem.diem)
-                    elif diem.loai_diem == 'thực hành':
-                        diem_thuc_hanh += '''
-                        <a class="btn" id="th_{0}" data-toggle="modal" data-target="#point" data-student-id="{1}" data-ngay-lam="{2}" data-bai-lam="{3}">{4}</a>,
-                        '''.format(diem.id, student.id, str(diem.ngay_lam), "1+1=2", diem.diem)
+                    if diem.loai_diem == "kiểm tra 15'":
+                        kiem_tra_15p += '''
+                        <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
+                        '''.format(diem.id, diem.diem)
+                    elif diem.loai_diem == 'kiểm tra 1 tiết':
+                        kiem_tra_1_tiet += '''
+                               <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
+                                '''.format(diem.id, diem.diem)
                     elif diem.loai_diem == 'thi':
                         diem_thi += '''
-                        <a class="btn" id="thi_{0}" data-toggle="modal" data-target="#point" data-student-id="{1}" data-ngay-lam="{2}" data-bai-lam="{3}">{4}</a>,
-                        '''.format(diem.id, student.id, str(diem.ngay_lam), "1+1=2", diem.diem)
-                diem_ly_thuyet += '</div>'
-                diem_thuc_hanh += '</div>'
+                        <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
+                                '''.format(diem.id, diem.diem)
+                kiem_tra_15p += '</div>'
+                kiem_tra_1_tiet += '</div>'
                 diem_thi += '</div>'
-                data.append([fullname, diem_ly_thuyet, diem_thuc_hanh, diem_thi])
+                data.append([fullname, kiem_tra_15p, kiem_tra_1_tiet, diem_thi])
         big_data = {"data": data}
         json_data = json.loads(json.dumps(big_data))
         return JsonResponse(json_data)
 
+
+def manage_point_detail(request, id):
+    user = request.user
+    if user.is_authenticated and user.position == 1:
+        diem = DiemSo.objects.get(id=id)
+        content = '''
+        <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+          <input type="text" class="form-control has-feedback-left" value="{0}" disabled>
+          <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+          <input type="number" class="form-control has-feedback-left" value="{1}" disabled>
+          <span class="fa fa-edit form-control-feedback left" aria-hidden="true"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+          <input type="date" class="form-control has-feedback-left" value="{2}" disabled>
+          <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+          <input type="text" class="form-control has-feedback-left" value="{3}" disabled>
+          <span class="fa fa-book form-control-feedback left" aria-hidden="true"></span>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+            {4}
+        </div>
+        <div class="clearfix"></div>
+        '''.format(diem.myuser_id.fullname, diem.diem, str(diem.ngay_lam), diem.loai_diem, diem.bai_lam)
+        return HttpResponse(content)    
+    
 
 def manage_de(request):
     user = request.user
@@ -133,7 +160,7 @@ def manage_de(request):
                                    mon_id=Mon.objects.get(id=request.POST['mon']), myuser_id=user)
             for q in json.loads(request.POST['list_ques']):
                 ChiTietDe.objects.create(cau_hoi_id=CauHoi.objects.get(id=q), de_id=de)
-
+                
         content = {'username': mark_safe(json.dumps(user.username)),
                    'list_lop': ChiTietLop.objects.filter(myuser_id=user),
                    'list_mon': GiaoVienMon.objects.filter(myuser_id=user),}
@@ -167,6 +194,13 @@ def chi_tiet_de_data(request, id):
         list_ques = ChiTietDe.objects.filter(de_id=id)
         content = ''
         for i, ques in enumerate(list_ques):
+            media = ''
+            if "Hình ảnh" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<img style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{}" alt="khÃ´ng tá»“n táº¡i" />'.format(ques.cau_hoi_id.dinh_kem)
+            elif "Âm thanh" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<br><audio controls width="100%" src="/media/{}"></audio>'.format(ques.cau_hoi_id.dinh_kem)
+            elif "Video" in ques.cau_hoi_id.dang_cau_hoi:
+                media = '<video controls width="100%" src="/media/{}"></video>'.format(ques.cau_hoi_id.dinh_kem)
             dap_an = '\n'
             list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
             for k, da in enumerate(list_dap_an):
@@ -178,8 +212,9 @@ def chi_tiet_de_data(request, id):
                 dap_an += '{0}: {1}{2}\n'.format(s, da.noi_dung, dung)
             content += '''
             <label>Câu hỏi {0}:</label>
+            {3}
             <pre style="white-space: pre-wrap;">{1}{2}</pre>
-            '''.format(i+1, list_ques[i].cau_hoi_id.noi_dung, dap_an)
+            '''.format(i+1, list_ques[i].cau_hoi_id.noi_dung, dap_an, media)
         return HttpResponse(content)
 
 
@@ -193,6 +228,14 @@ def manage_question(request):
             if 'edit' in request.POST:
                 ch = CauHoi.objects.get(id=request.POST['id'])
                 ch.noi_dung = request.POST['noi_dung']
+                if request.FILES.get('dinh_kem') is not None:
+                    try:
+                        os.remove(os.path.join(settings.MEDIA_ROOT, str(ch.dinh_kem)))
+                    except:
+                        pass
+                    ch.dinh_kem = request.FILES['dinh_kem']
+                    ch.save()
+                    handle_uploaded_file(request.FILES['dinh_kem'])
                 ch.save()
                 DapAn.objects.filter(cau_hoi_id=ch).delete()
             else:
@@ -206,6 +249,10 @@ def manage_question(request):
                     do_kho = 2
                 ch = CauHoi.objects.create(myuser_id=user, mon_id=mon, noi_dung=request.POST['noi_dung'], do_kho=do_kho,
                                            chu_de=request.POST['chu_de'], dang_cau_hoi=request.POST['dang_cau_hoi'])
+                if request.FILES.get('dinh_kem') is not None:
+                    ch.dinh_kem = request.FILES['dinh_kem']
+                    ch.save()
+                    handle_uploaded_file(request.FILES['dinh_kem'])
             dap_an = json.loads(request.POST['dap_an'])
             nd_dap_an = json.loads(request.POST['nd_dap_an'])
             for i in range(len(dap_an)):
@@ -241,7 +288,12 @@ def question_data(request, id_mon, all):
             ls_dap_an = ''
             for dap_an in DapAn.objects.filter(cau_hoi_id=ques):
                 ls_dap_an += '<p hidden id="dap_an_{0}" class="dap_an_{1}" data-dung="{2}">{3}</p>'.format(dap_an.id, ques.id, dap_an.dap_an_dung, dap_an.noi_dung)
-            noi_dung = '<p hidden id="noi_dung_{0}">{1} </p><p id="tom_tat_{0}">{2} ...</p>{3}'.format(ques.id, ques.noi_dung, ques.noi_dung[:40], ls_dap_an)
+            noi_dung = '''
+            <p hidden id="noi_dung_{0}">{1} </p>
+            <p id="tom_tat_{0}">{2} ...</p>
+            {3}
+            <p hidden id="dinh_kem_{0}">{4}</p>
+            '''.format(ques.id, ques.noi_dung, ques.noi_dung[:40], ls_dap_an, ques.dinh_kem)
             if all == 0:
                 data.append([chu_de, dang_cau_hoi, do_kho, ngay_tao, noi_dung])
             else:
@@ -310,7 +362,6 @@ def user_login(request):
                     user = user_form.save()
                     return redirect('/')
                 else:
-                    print(user_form.errors)
                     error = ''
                     for field in user_form:
                         error += field.errors
@@ -351,3 +402,38 @@ def user_profile(request):
         return render(request, 'teacher/profile.html', content)
     else:
         return HttpResponseRedirect('/')
+
+
+def share(request, lop):
+    user = request.user
+    if user.is_authenticated:
+        ls_chi_tiet = ChiTietLop.objects.filter(lop_id=Lop.objects.get(ten=lop)).values('myuser_id')
+        ls_student = MyUser.objects.filter(id__in=ls_chi_tiet, position=0)
+        content = {'username': mark_safe(json.dumps(user.username)),
+                   'list_lop': ChiTietLop.objects.filter(myuser_id=user),
+                   'ls_student': ls_student}
+        if user.position == 0:
+            return render(request, 'student/share.html', content)
+        else:
+            return render(request, 'teacher/share.html', content)
+    else:
+        return HttpResponseRedirect('/')
+
+
+def call11(request):
+    user = request.user
+    if user.is_authenticated and user.position == 1:
+        return render(request, 'videocall/home.html')
+    else:
+        return HttpResponseRedirect('/')
+
+
+def handle_uploaded_file(f):
+    name = f.name
+    if " " in name:
+        name = name.replace(" ", "_")
+    path = "{0}/question_upload/{1}".format(settings.MEDIA_ROOT, name)
+    file = open(path, 'wb+')
+    for chunk in f.chunks():
+        file.write(chunk)
+    file.close()   

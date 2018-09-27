@@ -187,7 +187,7 @@ class CauHoi(models.Model):
     do_kho = models.IntegerField()# 0: dễ, 1: trung bình, 2: khó
     chu_de = models.CharField(max_length=255)
     dang_cau_hoi = models.CharField(max_length=255)
-
+    dinh_kem = models.FileField(null=True, blank=True, upload_to='question_upload')
 
     class Meta:
         managed = True

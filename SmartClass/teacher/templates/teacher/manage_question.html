@@ -50,9 +50,11 @@
 
                                 <div class="col-md-4 col-sm-12 col-xs-12 form-group" >
                                   <select name="dang_cau_hoi" class="form-control" id="dang_cau_hoi" >
-                                        <option>Trắc nhiệm 2 đáp án</option>
-                                        <option>Trắc nhiệm 3 đáp án</option>
-                                        <option>Trắc nhiệm 4 đáp án</option>
+                                        <option>Văn bản + Trắc nhiệm</option>
++                                        <option>Hình ảnh + Trắc nhiệm</option>
++                                        <option>Âm thanh + Trắc nhiệm</option>
++                                        <option>Video + Trắc nhiệm</option>
++                                        <option>Văn bản + Điền từ</option>
                                     </select>
                                 </div>
 
@@ -85,6 +87,22 @@
                                           <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                        </div>
+                                        <div class="col-md-11 col-sm-12 col-xs-12 form-group">
+                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                        </div>
+                                        <div class="col-md-11 col-sm-12 col-xs-12 form-group">
+                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <button class="btn btn-success btn-lg" style="float:right" id="luu_cau_hoi">
@@ -94,7 +112,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
                             <div class="x_title">
-                                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
                                     <h2>Câu hỏi đã tạo</h2>
                                 </div>
                                 <div class="col-md-3 col-sm-12 col-xs-12 form-group">
@@ -143,8 +161,6 @@
               <h4 class="modal-title" id="question_title">Câu hỏi</h4>
             </div>
             <div class="modal-body" id="khung_modal">
-                {% csrf_token %}
-
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-primary" id="edit_question">Cập nhật</button>
@@ -153,7 +169,27 @@
         </div>
       </div>
     </div>
-
+<div class="modal" id="processing" role="dialog">
+      <div  class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+ 
+            <div class="modal-header">
+                <div class="col-md-11 col-sm-12 col-xs-12">
+                    <div class="progress" >
+                        <div id="progressBar" style="width:0%" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 col-sm-12 col-xs-12">
+                    <button id="cancel_upload" class="btn-danger" style="border-radius:6px" data-dismiss="modal">
+                        <span class="fa fa-close"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
 {% endblock content %}
 {% block javascripts %}
     {{ block.super }}

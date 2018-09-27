@@ -5,7 +5,7 @@
 {% block stylesheets %}
   {{ block.super }}
     <!-- bootstrap-wysiwyg -->
-    <link href="{% static 'css/chat.css' %}" rel="stylesheet">
+    
 {% endblock stylesheets %}
 
 {% block content %}
@@ -17,7 +17,7 @@
           <div class="x_panel">
             <div class="x_title">
               <h2>Lớp {{lop_ht}}  </h2>
-                <button class="btn btn-primary" style="float:right;">Trình chiếu <i class="fa fa-video-camera"></i> </button>
+                <button class="btn btn-primary" style="float:right;" onclick="document.location.href = '/share_{{lop_ht}}';">Trình chiếu <i class="fa fa-video-camera"></i> </button>
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -34,14 +34,19 @@
                       <div class="row">
                         <div class="col-sm-3 mail_list_column" style="overflow-y: scroll; height:600px;">
                           {% for student in ls_student %}
-                          <a href="#">
+                          <a href="javascript:register_popup_teacher('{{student.username}}', '{{student.fullname}}');">
                             <div class="mail_list">
-                              <div class="left">
-                                <i class="fa fa-circle"></i> <i class="fa fa-edit"></i>
-                              </div>
+                              <!-- <div class="left">
+                              </div> -->
+                              <p hidden>{{student.username}}</p>
                               <div class="right">
                                 <h3>{{ student.fullname }} <small>{{ student.last_login }}</small></h3>
-                                <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                                {% if student.gioi_tinh == 1%}
+                                  <p><b>Giới tính:</b> Nam</p>
+                                {% else%}
+                                  <p><b>Giới tính:</b> Nữ</p>
+                                {% endif%}
+                                <p><b>Email:</b> {{student.email}}</p>
                               </div>
                             </div>
                           </a>
@@ -50,54 +55,22 @@
                         </div>
                         <div class="col-sm-9 mail_view">
                           <div class="inbox-body">
-                            <div class="frame chat41">
+                            <div class="frame">
                               <ul>
-                                <li style="width:100%">
-                                  <div class="msj macro">
-                                    <div class="avatar">
-                                      <img class="img-circle" style="width:100%;" src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png"></div>
-                                    <div class="text text-l">
-                                      <p>hi hi</p>
-                                      <p><small>10:43 AM 24/8/2018</small></p>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li style="width:100%;">
-                                  <div class="msj-rta macro">
-                                    <div class="text text-r">
-                                      <p>a</p>
-                                      <p><small>10:44 AM 24/8/2018</small></p>
-                                    </div>
-                                    <div class="avatar" style="padding:0px 0px 0px 10px !important">
-                                      <img class="img-circle" style="width:100%;" src="https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png"></div></div></li>
-                                <li style="width:100%;">
-                                  <div class="msj-rta macro">
-                                    <div class="text text-r"><p>hey</p>
-                                      <p><small>1:42 PM 24/8/2018</small></p>
-                                    </div>
-                                    <div class="avatar" style="padding:0px 0px 0px 10px !important">
-                                      <img class="img-circle" style="width:100%;" src="https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png">
-                                    </div>
-                                  </div>
-                                </li>
-                                <li style="width:100%">
-                                  <div class="msj macro">
-                                    <div class="avatar">
-                                      <img class="img-circle" style="width:100%;" src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png">
-                                    </div>
-                                    <div class="text text-l">
-                                      <p>rêr</p>
-                                      <p><small>2:29 PM 24/8/2018</small></p>
-                                    </div>
-                                  </div>
-                                </li>
+                                
                               </ul>
                               <div>
                                 <div class="msj-rta macro">
-                                  <div class="text text-r" style="background:whitesmoke !important">
+                                  <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
                                     <input id="chat-message-input41" class="mytext" placeholder="Type a message"></div>
+                                    <i class="fa fa-file" style="
+                                          font-size: 26px;
+                                          padding-top: 8px;
+                                          padding-left: 77px;
+                                          float: right;
+                                      "></i>
                                 </div>
-                                <div style="padding:10px;">
+                                <div style="padding:10px; margin-right: 24px;">
                                   <span id="chat-message-submit41" class="glyphicon glyphicon-share-alt xxx"></span>
                                 </div>
                               </div>
@@ -146,223 +119,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
-                          </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
-                          </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>
@@ -418,10 +175,12 @@
           </form>
       </div>
     </div>
-
+    <script src="{% static 'js/teacher/peerjs/jquery.js' %}"></script>
+    <script src="{% static 'js/teacher/peerjs/main.js' %}"></script>
 {% endblock content %}
 
 {% block javascripts %}
   {{ block.super }}
   <script src="{% static 'js/teacher/manage_class.js' %}"></script>
+  <script src="{% static 'js/teacher/peerjs/peer.js' %}"></script>
 {% endblock javascripts %}

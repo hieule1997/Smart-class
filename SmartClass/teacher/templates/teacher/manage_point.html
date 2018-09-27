@@ -30,8 +30,8 @@
                     <thead>
                       <tr>
                         <th>Họ tên</th>
-                        <th>Điểm lý thuyết</th>
-                        <th>Điểm thực hành</th>
+                        <th>Điểm kiểm tra 15'</th>
+                        <th>Điểm kiểm tra 1 tiết</th>
                         <th>Điểm thi</th>
                       </tr>
                     </thead>
@@ -54,35 +54,9 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title" id="point_title">Thông tin điểm</h4>
         </div>
-        <div class="modal-body">
-            {% csrf_token %}
-            <input type="hidden" name="gvid">
-            <input type="hidden" name="kieu">
-            <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-              <input type="text" class="form-control has-feedback-left" name="fullname" placeholder="Họ tên" disabled>
-              <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-              <input type="number" class="form-control has-feedback-left" name="diem" placeholder="Điểm" min="0" max="10" disabled>
-              <span class="fa fa-edit form-control-feedback left" aria-hidden="true"></span>
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-              <input type="date" class="form-control has-feedback-left" name="ngay_lam" placeholder="Ngày làm" disabled>
-              <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-              <input type="text" class="form-control has-feedback-left" name="loai_bai" placeholder="Loại bài" disabled>
-              <span class="fa fa-book form-control-feedback left" aria-hidden="true"></span>
-            </div>
-            <label>Bài làm của học sinh</label>
-            <textarea class="form-control" name="bai_lam" disabled></textarea>
-             <div class="clearfix"></div>
+        <div class="modal-body" id="point_data">
         </div>
         <div class="modal-footer">
-           <button type="button" class="btn btn-primary"  id="point_save">Cập nhật</button>
            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
         </div>
     </div>

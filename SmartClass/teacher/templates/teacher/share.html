@@ -1,0 +1,123 @@
+{% extends "teacher/base.html" %}
+{% load static %}
+{% block title %} Inbox {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+    <!-- bootstrap-wysiwyg -->
+    <style>
+        * {
+            word-wrap:break-word;
+        }
+        video {
+            width: 100%;
+        }
+        button,
+        input,
+        select {
+            font-weight: normal;
+            padding: 2px 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: none;
+            font-size: 16px;
+            outline: none;
+        }
+        .make-center {
+            text-align: center;
+            padding: 5px 10px;
+        }
+        img, input, textarea {
+          max-width: 100%
+        }
+        @media all and (max-width: 500px) {
+            .fork-left, .fork-right, .github-stargazers {
+                display: none;
+            }
+        }
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="x_panel">
+            <div class="x_title">
+                <h2>Lớp </h2>
+                <h2 id="room-id"></h2>
+                {% if user.position == 1 %}
+                <button class="btn btn-danger" style="float:right;" id="close-room">Dừng <i class="fa fa-close"></i> </button>
+                <button class="btn btn-info" style="float:right;" id="reopen-room">Chọn cửa sổ mới <i class="fa fa-repeat"></i> </button>
+                <input type="hidden" value="teacher" id="position">
+                {% else %}
+                <input type="hidden" value="student" id="position">
+                {% endif %}
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+              <div class="row">
+                <div class="col-sm-3 mail_list_column" style="overflow-y: scroll; height:600px;">
+                  {% for student in ls_student %}
+                  <a href="#">
+                    <div class="mail_list">
+                      <div class="left">
+                        <i class="fa fa-circle"></i> <i class="fa fa-edit"></i>
+                      </div>
+                      <div class="right">
+                        <h3>{{ student.fullname }} <small>{{ student.last_login }}</small></h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation enim ad minim veniam, quis nostrud exercitation...</p>
+                      </div>
+                    </div>
+                  </a>
+                  {% endfor %}
+
+                </div>
+                <div class="col-sm-9 mail_view">
+                  <div class="inbox-body">
+                    <div id="videos-container" style="width:100%"></div>
+                    <div id="audios-container"></div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal" id="share" role="dialog">
+      <div  class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title" id="teacher_title">Thay đổi thông tin nhóm</h4>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                <!--<div id="videos-container"></div>-->
+                <!--<div id="audios-container"></div>-->
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary"  id="save_profile">Lưu</button>
+               <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+    <script src="{% static 'js/peer/RTCMultiConnection.min.js' %}"></script>
+    <script src="http://192.168.100.22:9002/socket.io/socket.io.js"></script>
+    <script src="{% static 'js/peer/getScreenId.js' %}"></script>
+    <script src="{% static 'js/peer/getMediaElement.js' %}"></script>
+    <script src="{% static 'js/peer/screen.js' %}"></script>
+{% endblock javascripts %}
+

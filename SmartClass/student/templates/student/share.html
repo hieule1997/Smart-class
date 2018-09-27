@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% load static %}
+    <link href="{% static 'vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/chat.css' %}" rel="stylesheet">
+    <link href="/static/build/css/custom.css" rel="stylesheet">
+    <style>
+        * {
+            word-wrap:break-word;
+        }
+        video {
+            width: 100%;
+        }
+        button,
+        input,
+        select {
+            font-weight: normal;
+            padding: 2px 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: none;
+            font-size: 16px;
+            outline: none;
+        }
+        .make-center {
+            text-align: center;
+            padding: 5px 10px;
+        }
+        img, input, textarea {
+          max-width: 100%
+        }
+        @media all and (max-width: 500px) {
+            .fork-left, .fork-right, .github-stargazers {
+                display: none;
+            }
+        }
+    </style>
+  </head>
+
+<body>
+    <div class="right_col" role="main">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="x_panel">
+            <div class="x_title">
+                <h2>Lớp </h2>
+                <h2 id="room-id"></h2>
+                <button class="btn btn-success" style="float:right">
+                    <i class="fa fa-thumbs-o-up"></i>
+                    Xin phát biểu
+                </button>
+                <input type="hidden" value="student" id="position">
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="videos-container" style="width:100%">
+                </div>
+                <div id="audios-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="{% static 'vendors/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'vendors/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'build/js/custom.js' %}"></script>
+    <script src="{% static 'js/teacher/chat_student.js' %}"></script>
+    <script>
+      var userName = {{ username }};
+      var userSocket = new WebSocket(
+          'ws://' + window.location.host +
+          '/ws/' + userName + '/');
+
+      var chatallSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/' + userName + 'chatall/');
+
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+
+
+      function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm + ' ' +date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+        return strTime;
+      }
+
+
+      var key = '';
+      var me = {};
+      me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+      var you = {};
+      you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";
+          //-- No use time. It is a javaScript effect.
+          function insertChat(who, text, time){
+              if (time === undefined){
+                  time = 0;
+              }
+              var control = "";
+              var date = time;
+              if (who == userName){
+                control = '<li style="padding-top: 15px;margin-left: 5em;width:75%;">' +
+                              '<div class="msj-rta macro" style="background-color: #BFE9F9;">' +
+                                  '<div class="text text-r">' +
+                                      '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
+                                      '<p><small style="color: #444950;">'+date+'</small></p>' +
+                                  '</div></div></li>';
+              }else{
+                control = '<li style="width:75%">' +
+                    '<h4 style="margin-bottom: -3px;margin-left: 10%;font-size: 12px;">'+who+'</h4>'+
+                    '<div class="avatar" style="padding:5px 0px 0px 10px !important"><img class="img-circle" style="width:90%;" src="'+me.avatar+'" /></div>'+
+                    '<div class="msj-rta macro">' +
+                        '<div class="text text-r">' +
+                            '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
+                            '<p><small style="color: #444950;">'+date+'</small></p>' +
+                        '</div></div>' +
+                    '</li>';
+              }
+              setTimeout(
+                  function(){
+                      $(".frame > ul").append(control).scrollTop($(".frame > ul").prop('scrollHeight'));
+                  }, time);
+          }
+          chatallSocket.onmessage = function(e) {
+              var data = JSON.parse(e.data);
+              var message = data['message'];
+              var who = data['who'];
+              var time = data['time'];
+              if (time == 'None'){
+                if (key == ''){
+                  chatallSocket.send(JSON.stringify({
+                    'message' : 'No',
+                    'who': userName,
+                    'time' : 'key'
+                  }));
+                }else{
+                  chatallSocket.send(JSON.stringify({
+                    'message' : key,
+                    'who': userName,
+                    'time' : 'key'
+                  }));
+                }
+              }else if (time != 'key'){
+                insertChat(who, message, time);
+              }
+          };
+
+
+      $('body').on('click', '.xxx', function(){
+          $("body .mytext").trigger({type: 'keydown', which: 13, keyCode: 13});
+      })
+      $("body .mytext").focus();
+      $('body').on('keyup', '.mytext', function(e){
+          if (e.keyCode === 13) {
+              $(this).parent().parent().next().children('span').click();
+          }
+      })
+      $('body').on('click', '.xxx', function(){
+          var message = $(this).parent().parent().children().children().children('input').val();
+          message = escapeHtml(message);
+          var date = formatAMPM(new Date());
+          if (message != ''){
+            chatallSocket.send(JSON.stringify({
+                  'message' : message,
+                  'who' : userName,
+                  'time' : date
+              }));
+          }
+          $(this).parent().parent().children().children().children('input').val('');
+      })
+
+
+      var socket_teacher;
+      $('.mail_list').on('click',function(){
+            var std = $(this).children('p').text();
+            //  $("body .noti_chat"+std_username).hide();
+             $('body #'+std).children('.frame_std').show();
+            //  if (typeof(Storage) !== "undefined") {
+            //     var herf = $(this).attr('href');
+            //     var chat = herf.substring(herf.indexOf("(")+1, herf.indexOf(")")) + ',' + std_username;
+            //     // Gán dữ liệu
+            //     sessionStorage.setItem(std_username, chat);
+
+            //     // Lấy dữ liệu
+            // } else {
+            //     document.write('Trình duyệt của bạn không hỗ trợ local storage');
+            // }
+
+            socket_teacher = new WebSocket(
+                 'ws://' + window.location.host +
+                 '/ws/' + userName +'chat11/');
+
+             var me = {};
+             me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+
+             var you = {};
+             you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";
+
+             //-- No use time. It is a javaScript effect.
+             function insertChat1(who, text, time){
+                 if (time === undefined){
+                     time = 0;
+                 }
+                 var control = "";
+                 var date = time;
+
+                 if (who == userName){
+                    control = '<li style="padding-top: 15px;margin-left: 5em;width:75%;">' +
+                            '<div class="msj-rta macro" style="background-color: #BFE9F9;">' +
+                              '<div class="text text-r">' +
+                                '<p style="color: #444950;line-height: 17px;word-break: break-all;">'+text+'</p>' +
+                                '<p><small style="color: #444950;">'+date+'</small></p>' +
+                              '</div></div></li>';
+                    }else{
+                    control = '<li style="width:75%">' +
+                      '<h4 style="margin-bottom: -3px;margin-left: 10%;font-size: 12px;">'+who+'</h4>'+
+                      '<div class="avatar" style="padding:5px 0px 0px 10px;width: 20%;margin-left: -12%;margin-top: 5%; !important"><img class="img-circle" style="width:90%;" src="'+me.avatar+'" /></div>'+
+                      '<div class="msj-rta macro">' +
+                        '<div class="text text-r">' +
+                          '<p style="color: #444950;line-height: 17px;word-break: break-all;">'+text+'</p>' +
+                          '<p><small style="color: #444950;">'+date+'</small></p>' +
+                        '</div></div>' +
+                      '</li>';
+                    }
+                 setTimeout(
+                     function(){
+                         $(".chat"+std).children('ul').append(control).scrollTop($(".chat"+std).children('ul').prop('scrollHeight'));
+                     }, time);
+
+              }
+
+
+              socket_teacher.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var message = data['message'];
+                var who = data['who'];
+                var time = data['time'];
+                insertChat1(who, message, time);
+              };
+
+         });
+
+         $('body').on('click', '.header-chat', function(){
+            $(this).next().slideToggle(300, 'swing');
+          })
+
+          $('body').on('click', '.yyy', function(){
+            $('body .mytext1').trigger({type: 'keydown', which: 13, keyCode: 13});
+          })
+
+          $("body .mytext1").focus();
+          $('body').on('keyup', '.mytext1', function(e){
+            if (e.keyCode === 13) {
+              $(this).parent().parent().next().children('.yyy').click();
+            }
+          })
+
+
+          $('body').on('click', '.yyy', function(){
+            var message = $(this).parent().parent().children().children().children('.mytext1').val();
+            message = escapeHtml(message);
+            var date = formatAMPM(new Date());
+            if (message != ''){
+              socket_teacher.send(JSON.stringify({
+              'message' : message,
+              'who' : userName,
+              'time' : date
+              }));
+            }
+            $(this).parent().parent().children().children().children('input').val('');
+          })
+
+
+
+          $('body').on('click', '.chat-close', function(){
+            var teacher_name = $(this).attr('id');
+            socket_teacher.close();
+            // sessionStorage.removeItem(tk_id);
+            $("body #chat"+teacher_name+" .frame > ul").empty();
+          })
+
+
+
+
+    </script>
+    <script src="{% static 'js/peer/RTCMultiConnection.min.js' %}"></script>
+    <script src="http://192.168.100.22:9002/socket.io/socket.io.js"></script>
+    <script src="{% static 'js/peer/getScreenId.js' %}"></script>
+    <script src="{% static 'js/peer/getMediaElement.js' %}"></script>
+    <script src="{% static 'js/peer/screen.js' %}"></script>
+</body>
+</html>
+
+

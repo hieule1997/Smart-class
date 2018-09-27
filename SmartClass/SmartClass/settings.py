@@ -26,6 +26,7 @@ SECRET_KEY = 'k1^5!@h0ovice6d%4)zxak4=r_y9zkx=$m1sij8&+)rsw=$%ak'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+ASGI_APPLICATION = 'SmartClass.routing.application'
 
 
 # Application definition
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'student',
     'teacher',
     'adminsc',
+    'channels',
 ]
 
 AUTH_USER_MODEL = 'teacher.MyUser'
