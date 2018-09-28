@@ -3,10 +3,10 @@
 {% block stylesheets %}
     {{ block.super }}
     <link href="{% static 'vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
-    <!--<link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.themes.min.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" href="{% static 'math/katex.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'math/monokai-sublime.min.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'math/quill/quill.snow.css' %}" rel="stylesheet"/>
+
 {% endblock stylesheets %}
 {% block content %}
 <div class="right_col" role="main">
@@ -268,11 +268,12 @@
 {% endblock content %}
 {% block javascripts %}
     {{ block.super }}
-    <!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
-    <!--<script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>-->
-    <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
 
+    <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js' %}"></script>
+    <script src="{% static 'math/katex.min.js' %}"></script>
+    <script src="{% static 'math/highlight.min.js' %}" ></script>
+    <script src="{% static 'math/quill/quill.min.js' %}"></script>
     <script src="{% static 'js/teacher/manage_exam.js' %}"></script>
 {% endblock javascripts %}

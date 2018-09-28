@@ -4,6 +4,9 @@
 
 {% block stylesheets %}
   {{ block.super }}
+    <link rel="stylesheet" href="{% static 'math/katex.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/monokai-sublime.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/quill/quill.snow.css' %}" />
     <!-- bootstrap-wysiwyg -->
     <!--<link href="{% static 'css/chat.css' %}" rel="stylesheet">-->
 {% endblock stylesheets %}
@@ -56,5 +59,8 @@
 
 {% block javascripts %}
   {{ block.super }}
-  <script src="{% static 'js/student/exam.js' %}"></script>
+    <script src="{% static 'math/katex.min.js' %}"></script>
+    <script src="{% static 'math/highlight.min.js' %}" ></script>
+    <script src="{% static 'math/quill/quill.min.js' %}"></script>
+    <script src="{% static 'js/student/exam.js' %}"></script>
 {% endblock javascripts %}

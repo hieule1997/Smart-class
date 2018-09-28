@@ -3,10 +3,18 @@
 {% block stylesheets %}
     {{ block.super }}
     <link href="{% static 'vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
-    <!--<link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">-->
-    <!--<link href="{% static 'css/easy-autocomplete.themes.min.css' %}" rel="stylesheet">-->
+
+    <link rel="stylesheet" href="{% static 'math/katex.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/monokai-sublime.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/quill/quill.snow.css' %}" />
+    <style>
+        .ques-container {
+            height: 200px;
+          }
+        .answer-container {
+            height: 50px;
+          }
+    </style>
 {% endblock stylesheets %}
 {% block content %}
 <div class="right_col" role="main">
@@ -69,14 +77,17 @@
                                 <br>
                                 <div class="" id="khung">
                                     <label>Nội dung:</label>
-                                    <textarea class="form-control" name="noi_dung" placeholder="Nhập nội dung" rows="10"></textarea>
+                                    <!--<textarea class="form-control" name="noi_dung" placeholder="Nhập nội dung" rows="10"></textarea>-->
+                                    <div id="noi_dung" class="ques-container"></div>
+
                                     <br>
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
                                             <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>
+                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>-->
+                                            <div id="dap_an_A" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -84,7 +95,8 @@
                                           <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>
+                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>-->
+                                            <div id="dap_an_B" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -92,7 +104,8 @@
                                           <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>
+                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>-->
+                                            <div id="dap_an_C" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -100,7 +113,8 @@
                                           <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>
+                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>-->
+                                            <div id="dap_an_D" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -190,6 +204,8 @@
         </div>
       </div>
     </div>
+
+
 {% endblock content %}
 {% block javascripts %}
     {{ block.super }}
@@ -197,5 +213,8 @@
     <!--<script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>-->
     <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'math/katex.min.js' %}"></script>
+    <script src="{% static 'math/highlight.min.js' %}" ></script>
+    <script src="{% static 'math/quill/quill.min.js' %}"></script>
     <script src="{% static 'js/teacher/manage_question.js' %}"></script>
 {% endblock javascripts %}

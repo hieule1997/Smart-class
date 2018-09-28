@@ -21,6 +21,7 @@ from django.core.mail import EmailMessage
 from teacher.models import *
 
 from django.contrib import messages
+import re
 
 
 class EmailThread(threading.Thread):
@@ -80,7 +81,10 @@ def user_profile(request):
 def score(request):
     user = request.user
     if user.is_authenticated and user.position == 0:
-        content = {'mon': lop_mon(user), 'username': mark_safe(json.dumps(user.username))}
+        lopOb = ChiTietLop.objects.get(myuser_id=user)
+        content = {'lop': mark_safe(json.dumps(lopOb.lop_id.ten)),
+                   'mon': lop_mon(user),
+                   'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/score.html', content)
     else:
         return redirect("/")
@@ -95,7 +99,8 @@ def mon(request, id):
         ls_student = MyUser.objects.filter(id__in=ls_chi_tiet, position=0)
         ls_teacher = MyUser.objects.filter(id__in=ls_chi_tiet, position=1)
         teacher_ht = GiaoVienMon.objects.get(myuser_id__in=ls_teacher, mon_id=monOb)
-        content = {'lop': mark_safe(json.dumps(lopOb.lop_id.ten)),'mon': lop_mon(user), 'mon_ht': monOb, 'ls_student': ls_student, 'teacher_ht': teacher_ht, 'username': mark_safe(json.dumps(user.username))}
+        content = {'lop': mark_safe(json.dumps(lopOb.lop_id.ten)), 'mon': lop_mon(user), 'mon_ht': monOb,
+                   'ls_student': ls_student, 'teacher_ht': teacher_ht, 'username': mark_safe(json.dumps(user.username))}
         return render(request, 'student/subjects.html', content)
     else:
         return redirect("/")
@@ -110,23 +115,31 @@ def score_data(request):
             list_score = DiemSo.objects.filter(myuser_id=user, mon_id=mon)
             if len(list_score) == 0:
                 continue
-            mon_data = ' <a class="btn">{} - {}</a>'.format(mon.ten, mon.lop)
-            kiem_tra_15p = ''
-            kiem_tra_1_tiet = ''
-            diem_thi = ''
+            mon_data = ' <h5>{} - {}</h5>'.format(mon.ten, mon.lop)
+            kiem_tra_15p = '<h4>'
+            kiem_tra_1_tiet = '<h4>'
+            diem_thi = '<h4>'
             for diem in list_score:
+                if diem.diem < 5.0:
+                    loai = "danger"
+                elif diem.diem >= 5.0 and diem.diem < 6.5 :
+                    loai = "warning"
+                elif diem.diem >= 6.5 and diem.diem < 8.0 :
+                    loai = "info"
+                else:
+                    loai = "success"
+                temp = '''
+                    <span class="label label-{2}" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</span>
+                    '''.format(diem.id, diem.diem, loai)
                 if diem.loai_diem == "kiểm tra 15'":
-                    kiem_tra_15p += '''
-                        <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
-                        '''.format(diem.id, diem.diem)
+                    kiem_tra_15p += temp
                 elif diem.loai_diem == 'kiểm tra 1 tiết':
-                    kiem_tra_1_tiet += '''
-                        <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
-                        '''.format(diem.id, diem.diem)
+                    kiem_tra_1_tiet += temp
                 elif diem.loai_diem == 'thi':
-                    diem_thi += '''
-                        <a class="btn" data-id="{0}" data-toggle="modal" data-target="#point" >{1}</a>,
-                        '''.format(diem.id, diem.diem)
+                    diem_thi += temp
+            kiem_tra_15p += '</h4>'
+            kiem_tra_1_tiet += '</h4>'
+            diem_thi += '</h4>'
             data.append([mon_data, kiem_tra_15p, kiem_tra_1_tiet, diem_thi])
         big_data = {"data": data}
         json_data = json.loads(json.dumps(big_data))
@@ -154,7 +167,7 @@ def score_data_detail(request, id):
           <input type="text" class="form-control has-feedback-left" value="{3}" disabled>
           <span class="fa fa-book form-control-feedback left" aria-hidden="true"></span>
         </div>
-        <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+        <div class="col-md-12 col-sm-12 col-xs-12">
             {4}
         </div>
         <div class="clearfix"></div>
@@ -213,11 +226,12 @@ def exam(request):
                     else:
                         if da.id in dap_an_id:
                             dung += '(Chọn)'
-                    tempt += '{0}: {1}{2}\n'.format(s, da.noi_dung, dung)
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    tempt += '<p>{0}: {1}{2}</p>'.format(s, result.group(1), dung)
                 bai_lam += '''
                 <label>Câu hỏi {0}:</label>
                 {3}
-                <pre style="white-space: pre-wrap;">{1}{2}</pre>
+                <ul class="list-unstyled msg_list"><li><a>{1}{2}</a></li></ul>
                 '''.format(i + 1, ch.cau_hoi_id.noi_dung, tempt, media)
             DiemSo.objects.create(de_id=de, myuser_id=user, mon_id=de.mon_id, loai_diem=de.loai_de, bai_lam=bai_lam,
                                   diem=round(s_dung/ChiTietDe.objects.filter(de_id=de).count(), 3)*10)
@@ -254,19 +268,20 @@ def exam_data(request, id):
             list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
             for k, da in enumerate(list_dap_an):
                 s = chr(ord(str(k)) + 17)
+                result = re.search('<p>(.*)</p>', da.noi_dung)
                 dap_an += '''<div class="row">
                     <div class="col-md-1 col-sm-12 col-xs-12 form-group">
                       <input type="radio" class="form-control" data-id="{0}" data-ch_id="{1}" data-da_id="{4}" style="transform:scale(0.6);" name="dap_an_{1}">
                     </div>
                     <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                      <pre style="white-space: pre-wrap;">{2}: {3}</pre>
+                        <ul class="list-unstyled msg_list"><li><a>{2}: {3}</a></li></ul>
                     </div>
-                </div>'''.format(i+1, ques.cau_hoi_id.id, s, da.noi_dung, da.id)
+                </div>'''.format(i+1, ques.cau_hoi_id.id, s, result.group(1), da.id)
             right_content += '''
                 <div id="cau_{0}">
                     <label>Câu hỏi {0}:</label>
                     {3}
-                    <pre style="white-space: pre-wrap;">{1}</pre>
+                    <ul class="list-unstyled msg_list"><li><a>{1}</a></li></ul>
                     {2}
                 </div>
             <div>

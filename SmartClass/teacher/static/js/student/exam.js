@@ -2,7 +2,7 @@ $(document).ready(function(){
     $('#thi').click(function(){
         $.ajax({
             type: 'GET',
-            url: '/student/exam_data_10',
+            url: '/student/exam_data_13',
             success: function(data){
                 $("#de_thi").html(data);
                 $('input[type=radio]').change(function(){

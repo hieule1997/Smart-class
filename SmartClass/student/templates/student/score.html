@@ -5,7 +5,9 @@
     {{ block.super }}
     <link href="{% static 'vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{% static 'math/katex.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/monokai-sublime.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'math/quill/quill.snow.css' %}" />
     <!--<link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">-->
     <!--<link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">-->
     <!--<link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">-->
@@ -74,6 +76,9 @@
       <script src="{% static 'vendors/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
       <script src="{% static 'vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
       <script src="{% static 'vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'math/katex.min.js' %}"></script>
+    <script src="{% static 'math/highlight.min.js' %}" ></script>
+    <script src="{% static 'math/quill/quill.min.js' %}"></script>
     <!--<script src="/static/vendors/jszip/dist/jszip.min.js"></script>-->
   <!--<script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>-->
   <!--<script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>-->
