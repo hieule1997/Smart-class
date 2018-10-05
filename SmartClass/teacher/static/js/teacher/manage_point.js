@@ -26,7 +26,12 @@ $(document).ready(function(){
             },
         });
     });
+
 });
 
-
-
+function PrintElem(){
+    $("body").first().html($("#point_data").html());
+    window.print();
+    location.reload();
+    return true;
+}

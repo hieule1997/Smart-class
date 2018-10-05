@@ -164,6 +164,9 @@ class De(models.Model):
     mon_id = models.ForeignKey('Mon', models.CASCADE, db_column='mon_id')
     ngay_tao = models.DateField(default=timezone.now)
     loai_de = models.TextField()
+    cau_truc = models.CharField(max_length=255)
+    so_luong = models.IntegerField()
+    chi_tiet_so_luong = models.CharField(max_length=255)
 
     class Meta:
         managed = True
@@ -173,6 +176,7 @@ class De(models.Model):
 class ChiTietDe(models.Model):
     de_id = models.ForeignKey('De', models.CASCADE, db_column='de_id')
     cau_hoi_id = models.ForeignKey('CauHoi', models.CASCADE, db_column='cau_hoi_id')
+    diem = models.FloatField()
 
     class Meta:
         managed = True
@@ -232,7 +236,9 @@ class DiemSo(models.Model):
 
 class Nhom(models.Model):
     ten_nhom = models.CharField(max_length=255)
-    myuser_id = models.ForeignKey('MyUser', models.CASCADE, null=True, db_column="myuser_id") 
+    myuser_id = models.ForeignKey('MyUser', models.CASCADE, null=True, db_column="myuser_id")
+    lop_id = models.ForeignKey('Lop', models.CASCADE, null=True, db_column="lopid")
+
 
     class Meta:
         managed = True
@@ -246,3 +252,16 @@ class ChiTietNhom(models.Model):
     class Meta:
         managed = True
         db_table = 'chi_tiet_nhom'
+
+
+class Khoa(models.Model):
+    ten_khoa = models.CharField()
+    mo_ta = models.CharField()
+
+    class Meta:
+        managed = True
+        db_table = 'khoa'
+
+
+class NienKhoa(models.Model):
+    ten_nien_khoa = models.CharField()

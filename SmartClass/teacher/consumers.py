@@ -18,6 +18,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name = self.room_name
         elif 'chat11' in self.room_name:
             self.room_group_name = 'chat11_%s' % self.room_name
+        elif 'chatgroup' in self.room_name:
+            self.room_group_name = 'chatgroup_%s' % self.room_name
         else:
             self.room_group_name = self.room_name
         # Join room group

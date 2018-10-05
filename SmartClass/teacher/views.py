@@ -25,6 +25,20 @@ import os
 from django.conf import settings
 import re
 
+def randomNhom(myList,number):
+    list_group = []
+    while len(myList) !=0 :
+        if len(myList) <= number:
+            list_group.append(myList)
+            myList = []
+        else:
+            group = []
+            while len(group) != number:
+                a = random.choice(myList)
+                del myList[myList.index(a)]
+                group.append(a)
+            list_group.append(group)
+    return list_group
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -54,10 +68,100 @@ def manage_class(request, lop):
         content = {'username': mark_safe(json.dumps(user.username)),
                    'list_lop': ChiTietLop.objects.filter(myuser_id=user),
                    'lop_ht': lop,
-                   'ls_student': ls_student}
+                   'ls_student': ls_student,
+                   }
+        list_std = []
+        for std in ls_student:
+            list_std.append(std)
+        if request.method == "POST":
+            if 'number_mem' in request.POST:
+                number_mem = request.POST['number_mem']
+                list_group = randomNhom(list_std,int(number_mem))
+                try:
+                    Nhom.objects.filter(myuser_id=user, lop_id=Lop.objects.get(ten=lop)).delete()
+                except:
+                    pass
+                for lg in list_group:
+                    ten_nhom = 'Group' +str(list_group.index(lg))
+                    nhom = Nhom.objects.create(ten_nhom=ten_nhom, myuser_id=user, lop_id=Lop.objects.get(ten=lop))
+                    for std in lg:
+                        ChiTietNhom.objects.create(nhom_id=nhom, myuser_id=std)
+            elif 'delete_group' in request.POST:
+                groupid = request.POST['delete_group']
+                try:
+                    Nhom.objects.get(id=groupid).delete()
+                except:
+                    pass
         return render(request, 'teacher/manage_class.html', content)
     else:
         return HttpResponseRedirect('/')
+
+
+# def group_data(request, lop):
+#     user = request.user
+#     if user.is_authenticated and user.position == 1:
+#         # data = []
+#         ls_nhom = Nhom.objects.filter(myuser_id=user, lop_id=Lop.objects.get(ten=lop))
+#         html = ''
+#         for lsg in ls_nhom:
+#             html += '''
+#                 <div class="col-md-3 col-sm-4 col-xs-12 profile_details" >
+#                             <div class="well profile_view">
+#                                 <div class="col-sm-12">
+#                                 <h4 class="brief">
+#                                 <i>'''+lsg.ten_nhom+'''</i>
+#                                 <button type="button" class="btn btn-danger btn-xs delete_gr" name="'''+str(lsg.id)+'''">Xóa</button>
+#                                 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#chinhsua" name="dang">Chỉnh sửa</button>
+#                                 </h4>
+#                                 <div class="left col-xs-7">
+#                                     <h2>Thành viên</h2>
+#                                     <ul class="list-unstyled">
+#             '''
+#             for std in ChiTietNhom.objects.filter(nhom_id=lsg):
+#                 html += '''<li id="drag1" draggable="true"><i class="fa fa-user"></i>'''+std.myuser_id.fullname+'''</li>'''
+#             html += '''</ul>
+#                               </div>
+                              
+#                             </div>
+#                             <div class="col-xs-12 bottom text-center">
+#                               <div class="col-xs-12 col-sm-6 emphasis">
+#                               </div>
+#                               <div class="col-xs-12 col-sm-6 emphasis">
+#                                 <button type="button" class="btn btn-danger btn-xs delete_gr" name="'''+str(lsg.id)+'''">Xóa</button>
+#                                 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#chinhsua" name="dang">
+#                                   Chỉnh sửa
+#                                 </button>
+#                               </div>
+#                             </div>
+#                           </div>
+#                         </div>'''
+#             # data.append(html)
+
+#         # json_data = json.loads(json.dumps({"data": data}))
+#         return HttpResponse(html)
+
+
+def group_data(request, lop):
+    user = request.user
+    if user.is_authenticated and user.position == 1:
+        # data = []
+        ls_nhom = Nhom.objects.filter(myuser_id=user, lop_id=Lop.objects.get(ten=lop))
+        html = ''
+        for lsg in ls_nhom:
+            html += '''
+                    <div class="mail_list group_class">
+                    <p hidden>'''+lop+user.username+lsg.ten_nhom+'''</p>
+                    <p hidden>'''+lsg.ten_nhom+'''</p>
+                    <div class="right">
+                        <h3>'''+lsg.ten_nhom+'''<small>
+                            <button type="button" class="btn btn-danger btn-xs delete_gr" name="'''+str(lsg.id)+'''">Xóa</button>
+                            <button type="button" class="btn btn-primary btn-xs change_gr" data-toggle="modal" data-target="#chinhsua" name="dang">Chỉnh sửa</button>
+                            </small></h3>
+            '''
+            for std in ChiTietNhom.objects.filter(nhom_id=lsg):
+                html += '''<p><i class="fa fa-user"></i> '''+std.myuser_id.fullname+'''</p>'''
+            html += '''</div></div>'''
+        return HttpResponse(html)
 
 
 def manage_point(request, lop):
@@ -80,7 +184,6 @@ def manage_point(request, lop):
 
 def manage_point_data(request, lop):
     user = request.user
-
     if user.is_authenticated and user.position == 1:
         data = []
         try:
@@ -163,10 +266,29 @@ def manage_de(request):
     if user.is_authenticated and user.position == 1:
         if request.method == "POST":
             de = De.objects.create(ten=request.POST['ten_de'], loai_de=request.POST['loai_de'],
+                                   cau_truc=request.POST['cau_truc'], so_luong=request.POST['so_luong'],
+                                   chi_tiet_so_luong=request.POST['chi_tiet_so_luong'],
                                    mon_id=Mon.objects.get(id=request.POST['mon']), myuser_id=user)
+            chi_tiet_so_luong = json.loads(de.chi_tiet_so_luong)
+            cau_truc = json.loads(de.cau_truc)
+            diem_tn = float(cau_truc['pt_tn'] / 10 / chi_tiet_so_luong['sl_tn'])
+            diem_dt = float(cau_truc['pt_dt'] / 10 / chi_tiet_so_luong['sl_dt'])
+            diem_tl = float(cau_truc['pt_tl'] / 10 / chi_tiet_so_luong['sl_tl'])
+            diem_ga = float(cau_truc['pt_ga'] / 10 / chi_tiet_so_luong['sl_ga'])
+            diem_gh = float(cau_truc['pt_gh'] / 10 / chi_tiet_so_luong['sl_gh'])
             for q in json.loads(request.POST['list_ques']):
-                ChiTietDe.objects.create(cau_hoi_id=CauHoi.objects.get(id=q), de_id=de)
-                
+                ch = CauHoi.objects.get(id=q)
+                if "Trắc nhiệm" in ch.dang_cau_hoi:
+                    diem = diem_tn
+                elif "Điền từ" in ch.dang_cau_hoi:
+                    diem = diem_dt
+                elif "Tự luận" in ch.dang_cau_hoi:
+                    diem = diem_tl
+                elif "Ghi âm" in ch.dang_cau_hoi:
+                    diem = diem_ga
+                elif "Ghi hình" in ch.dang_cau_hoi:
+                    diem = diem_gh
+                ChiTietDe.objects.create(cau_hoi_id=ch, de_id=de, diem=diem)
         content = {'username': mark_safe(json.dumps(user.username)),
                    'list_lop': ChiTietLop.objects.filter(myuser_id=user),
                    'list_mon': GiaoVienMon.objects.filter(myuser_id=user),}
@@ -208,17 +330,26 @@ def chi_tiet_de_data(request, id):
             elif "Video" in ques.cau_hoi_id.dang_cau_hoi:
                 media = '<video controls width="100%" src="/media/{}"></video>'.format(ques.cau_hoi_id.dinh_kem)
             dap_an = '\n'
-            list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
-            for k, da in enumerate(list_dap_an):
-                s = chr(ord(str(k)) + 17)
-                if da.dap_an_dung:
-                    dung = '(Đúng)'
-                else:
-                    dung = ''
-                result = re.search('<p>(.*)</p>', da.noi_dung)
-                dap_an += '''
-                <p>{0}: {2} {1}</p>
-                '''.format(s, dung, result.group(1))
+
+            if "Trắc nhiệm" in ques.cau_hoi_id.dang_cau_hoi:
+                for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)):
+                    s = chr(ord(str(k)) + 17)
+                    if da.dap_an_dung:
+                        dung = '(Đúng)'
+                    else:
+                        dung = ''
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    dap_an += '''
+                    <p>{0}: {2} {1}</p>
+                    '''.format(s, dung, result.group(1))
+
+            elif "Điền từ" in ques.cau_hoi_id.dang_cau_hoi:
+                for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)):
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    dap_an += '''
+                    <p>({0}): {1}</p>
+                    '''.format(k+1, result.group(1))
+
             content += '''
             <label>Câu hỏi {0}:</label>
             {3}
@@ -257,20 +388,26 @@ def manage_question(request):
                     do_kho = 1
                 else:
                     do_kho = 2
+
                 ch = CauHoi.objects.create(myuser_id=user, mon_id=mon, noi_dung=request.POST['noi_dung'], do_kho=do_kho,
                                            chu_de=request.POST['chu_de'], dang_cau_hoi=request.POST['dang_cau_hoi'])
                 if request.FILES.get('dinh_kem') is not None:
                     ch.dinh_kem = request.FILES['dinh_kem']
                     ch.save()
                     handle_uploaded_file(request.FILES['dinh_kem'])
-            dap_an = json.loads(request.POST['dap_an'])
-            nd_dap_an = json.loads(request.POST['nd_dap_an'])
-            for i in range(len(dap_an)):
-                if dap_an[i] == 0:
-                    dung = False
-                else:
-                    dung = True
-                DapAn.objects.create(cau_hoi_id=ch, mon_id=ch.mon_id, noi_dung=nd_dap_an[i], dap_an_dung=dung)
+            if "Trắc nhiệm" in ch.dang_cau_hoi:
+                dap_an = json.loads(request.POST['dap_an'])
+                nd_dap_an = json.loads(request.POST['nd_dap_an'])
+                for i in range(len(dap_an)):
+                    if dap_an[i] == 0:
+                        dung = False
+                    else:
+                        dung = True
+                    DapAn.objects.create(cau_hoi_id=ch, mon_id=ch.mon_id, noi_dung=nd_dap_an[i], dap_an_dung=dung)
+            elif "Điền từ" in ch.dang_cau_hoi:
+                nd_dap_an = json.loads(request.POST['nd_dap_an'])
+                for nd in nd_dap_an:
+                    DapAn.objects.create(cau_hoi_id=ch, mon_id=ch.mon_id, noi_dung=nd, dap_an_dung=True)
         return render(request, 'teacher/manage_question.html', content)
     else:
         return HttpResponseRedirect('/')
@@ -327,59 +464,69 @@ def question_data_detail(request, id, kieu):
                 '''.format(ques.noi_dung)
             elif "Hình ảnh" in ques.dang_cau_hoi:
                 media = '''
-                <div class="row">
-                    <div class="col-md-8 col-sm-12 col-xs-12 form-group">
-                        <img id="hinh_anh_modal" style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{0}" alt="chọn hình ảnh" />
-                        <input type='file' style="display: block; margin-left: auto;margin-right: auto;" accept="image/*" />
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                            <img id="hinh_anh_modal" style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{0}" alt="chọn hình ảnh" />
+                            <input type='file' style="display: block; margin-left: auto;margin-right: auto;" accept="image/*" />
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                          <div id="noi_dung_modal" class="ques-container">{1}</div>
+                        </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
-                      <div id="noi_dung_modal" class="ques-container">{1}</div>
-                    </div>
-                </div>
                 <br>
                 '''.format(ques.dinh_kem, ques.noi_dung)
             elif "Âm thanh" in ques.dang_cau_hoi:
                 media = '''
-                <div class="row">
-                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
-                      <audio id="media" controls width="100%" src="/media/{0}"></audio>
-                      <input type="file" style="display: block; margin-left: auto;margin-right: auto;"  accept="audio/*">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                          <audio id="media" controls width="100%" src="/media/{0}"></audio>
+                          <input type="file" style="display: block; margin-left: auto;margin-right: auto;"  accept="audio/*">
+                        </div>
+                        <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                          <div id="noi_dung_modal" class="ques-container">{1}</div>
+                        </div>
                     </div>
-                    <div class="col-md-8 col-sm-12 col-xs-12 form-group">
-                      <div id="noi_dung_modal" class="ques-container">{1}</div>
-                    </div>
-                </div>
                 <br>
                 '''.format(ques.dinh_kem, ques.noi_dung)
             elif "Video" in ques.dang_cau_hoi:
                 media = '''
-                <div class="row">
-                    <div class="col-md-8 col-sm-12 col-xs-12 form-group">
-                      <video id="media" controls width="100%" src="/media/{0}"></video>
-                      <input type="file" style="display: block; margin-left: auto;margin-right: auto;" accept="video/*">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                          <video id="media" controls width="100%" src="/media/{0}"></video>
+                          <input type="file" style="display: block; margin-left: auto;margin-right: auto;" accept="video/*">
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                          <div id="noi_dung_modal" class="ques-container">{1}</div>
+                        </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
-                      <div id="noi_dung_modal" class="ques-container">{1}</div>
-                    </div>
-                </div>
                 <br>
                 '''.format(ques.dinh_kem, ques.noi_dung)
-            for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
-                s = chr(ord(str(i)) + 17)
-                if da.dap_an_dung:
-                    dung = 'checked'
-                else:
-                    dung = ''
-                dat += '''
-                <div class="row">
-                    <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                      <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an" {0}>
+
+            if "Trắc nhiệm" in ques.dang_cau_hoi:
+                for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
+                    if da.dap_an_dung:
+                        dung = 'checked'
+                    else:
+                        dung = ''
+                    dat += '''
+                    <div class="row">
+                        <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an" {0}>
+                        </div>
+                        <div class="col-md-11 col-sm-12 col-xs-12 form-group">
+                          <div id="dap_an_{1}_modal" class="answer-container nd_dap_an">{2}</div>
+                        </div>
                     </div>
-                    <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                      <div id="dap_an_{1}_modal" class="answer-container nd_dap_an">{2}</div>
+                    '''.format(dung, i, da.noi_dung)
+            elif "Điền từ" in ques.dang_cau_hoi:
+                for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
+                    dat += '''
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                          <div id="dap_an_{0}_modal" class="answer-container nd_dap_an">{1}</div>
+                        </div>
                     </div>
-                </div>
-                '''.format(dung, s, da.noi_dung)
+                    '''.format(i, da.noi_dung)
             content = '''
             <input hidden name="id" value="{2}">
             <input hidden name="dang_cau_hoi" value="{3}">
@@ -398,21 +545,31 @@ def question_data_detail(request, id, kieu):
                 media = '''
                 <video id="media" controls width="100%" src="/media/{0}"></video>
                 '''.format(ques.dinh_kem, ques.noi_dung)
-            for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
-                s = chr(ord(str(i)) + 17)
-                if da.dap_an_dung:
-                    dung = '(Đúng)'
-                else:
-                    dung = ''
-                result = re.search('<p>(.*)</p>', da.noi_dung)
-                dat += '''
-                <p>{0}: {2} {1}</p>
-                '''.format(s, dung, result.group(1))
+
+            if "Trắc nhiệm" in ques.dang_cau_hoi:
+                for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
+                    s = chr(ord(str(i)) + 17)
+                    if da.dap_an_dung:
+                        dung = '(Đúng)'
+                    else:
+                        dung = ''
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    dat += '''
+                    <p>{0}: {2} {1}</p>
+                    '''.format(s, dung, result.group(1))
+
+            elif "Điền từ" in ques.dang_cau_hoi:
+                for i, da in enumerate(DapAn.objects.filter(cau_hoi_id=ques)):
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    dat += '''
+                    <p>({0}): {1}</p>
+                    '''.format(i+1, result.group(1))
             content = '''
-            <input hidden name="id" value="{2}">{0}
+            <input hidden name="id" value="{2}">
+            <input hidden name="dang_cau_hoi" value="{4}">{0}
             <ul class="list-unstyled msg_list">
             <li><a>{3}{1}</a></li>
-            '''.format(media, dat, ques.id, ques.noi_dung)
+            '''.format(media, dat, ques.id, ques.noi_dung, ques.dang_cau_hoi)
         return HttpResponse(content)
 
 
@@ -510,6 +667,27 @@ def user_logout(request):
 def user_profile(request):
     user = request.user
     if user.is_authenticated and user.position == 1:
+        if request.method == 'POST':
+            if 'fullname' in request.POST:
+                if check_password(request.POST['password'], user.password):
+                    user.fullname = request.POST['fullname']
+                    user.email = request.POST['email']
+                    if 'nu' in request.POST:
+                        user.gioi_tinh = 0
+                    else:
+                        user.gioi_tinh = 1
+                    user.save()
+                    messages.success(request, "Cập nhật thành công")
+                else:
+                    messages.warning(request, 'Mật khẩu không đúng')
+            else:
+                if check_password(request.POST['pass1'], user.password):
+                    user.set_password(request.POST['pass2'])
+                    user.save()
+                    messages.success(request, "Cập nhật thành công")
+                else:
+                    messages.warning(request, 'Mật khẩu không đúng')
+            return HttpResponseRedirect("profile")
         content = {'username': mark_safe(json.dumps(user.username)),
                    'list_lop': ChiTietLop.objects.filter(myuser_id=user)}
         return render(request, 'teacher/profile.html', content)

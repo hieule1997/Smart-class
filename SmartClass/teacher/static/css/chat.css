@@ -6,6 +6,10 @@
     border:0;padding:10px;background:whitesmoke;
 }
 
+.mytext2{
+    border:0;padding:10px;background:whitesmoke;
+}
+
 .text{
     width:100%;display:flex;flex-direction:column;
 }
@@ -57,6 +61,33 @@
     margin:auto;margin-left:1%;
 }
 .frame > ul {
+    width:100%;
+    list-style-type: none;
+    padding:18px;
+    position:absolute;
+    bottom:45px;
+    display:flex;
+    flex-direction: column;
+    top:38px;
+    overflow-y:scroll;
+}
+
+.frame2{
+    background:#e0e0de;
+    height:600px;
+    overflow:hidden;
+    padding:0;
+}
+.frame2 > div:last-of-type{
+    position:absolute;bottom:0;width:100%;display:flex;
+}
+.frame2 > div > div:nth-child(2) > span{
+    background: whitesmoke;padding: 10px;font-size: 21px;border-radius: 50%;
+}
+.frame2 > div > div.msj-rta.macro{
+    margin:auto;margin-left:1%;
+}
+.frame2 > ul {
     width:100%;
     list-style-type: none;
     padding:18px;

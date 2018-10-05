@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.user_login),
     path('teacher', views.home, name='home'),
     path('manage_class/<str:lop>', views.manage_class, name='manage_class'),
+    path('group_data/<str:lop>', views.group_data, name='group_data'),
     path('manage_point/<str:lop>', views.manage_point, name='manage_point'),
     path('manage_point_data_<str:lop>', views.manage_point_data, name='manage_point_data'),
     path('manage_point_detail_<int:id>', views.manage_point_detail, name='manage_point_detail'),

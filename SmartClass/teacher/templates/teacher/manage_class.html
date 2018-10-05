@@ -27,6 +27,11 @@
                   </li>
                   <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Nhóm</a>
                   </li>
+                  
+                  <li><button style="display:none;" class="btn btn-primary" id="btn_random_group" >Tạo nhóm Random</button>
+                  </li>
+                  <li><button style="display:none;" class="btn btn-primary" id="btn_manual_group">Tạo nhóm theo thứ tự</button>
+                  </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
                   <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
@@ -62,7 +67,7 @@
                               <div>
                                 <div class="msj-rta macro">
                                   <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
-                                    <input id="chat-message-input41" class="mytext" placeholder="Type a message"></div>
+                                    <input id="chat-message-input41" class="mytext" placeholder="Nhập tin nhắn"></div>
                                     <i class="fa fa-file" style="
                                           font-size: 26px;
                                           padding-top: 8px;
@@ -83,43 +88,73 @@
                     </div>
                   </div>
                   <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 20px;
-                     margin-top: 20px;">
-                      <button type="button" class="btn btn-primary">Tạo nhóm theo thứ tự</button>
-                      <button type="button" class="btn btn-primary">Tạo nhóm Random</button>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                      <div class="well profile_view">
-                        <div class="col-sm-12">
-                          <h4 class="brief"><i>Nhóm 1</i></h4>
-                          <div class="left col-xs-7">
-                            <h2>Thành viên</h2>
-                            <ul class="list-unstyled">
-                              <li><i class="fa fa-user"></i> Nguyễn Văn A </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn B </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn C </li>
-                              <li><i class="fa fa-user"></i> Nguyễn Văn D </li>
-                             
-                            </ul>
+                      {% comment %} <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 20px;
+                      margin-top: 20px;">
+                        <button type="button" class="btn btn-primary">Tạo nhóm theo thứ tự</button>
+                        <button type="button" class="btn btn-primary" id="btn_random_group">Tạo nhóm Random</button>
+                      </div> {% endcomment %}
+                      <div class="x_content">
+                        <div class="row">
+                          <div class="col-sm-3 mail_list_column list_group_all" style="overflow-y: scroll; height:600px;">
+                            
                           </div>
-                          <div class="right col-xs-5 text-center">
-                            <img src="/static/images/img.jpg" alt="" class="img-circle img-responsive">
+                          {% comment %} <div style="display: none;" class="col-sm-9 mail_view">
+                            <div class="inbox-body">
+                              <div class="frame2">
+                                <ul>
+                                  
+                                </ul>
+                                <div>
+                                  <div class="msj-rta macro">
+                                    <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
+                                      <input id="chat-message-input41" class="mytext2" placeholder="Nhập tin nhắn"></div>
+                                      <i class="fa fa-file" style="
+                                            font-size: 26px;
+                                            padding-top: 8px;
+                                            padding-left: 77px;
+                                            float: right;
+                                        "></i>
+                                  </div>
+                                  <div style="padding:10px; margin-right: 24px;">
+                                    <span id="chat-message-submit41" class="glyphicon glyphicon-share-alt zzz"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+  
+                          </div> {% endcomment %}
+
+                          <div class="col-sm-9 mail_view">
+                            <div class="inbox-body">
+                              <div>
+                                <h4 id="title-chat"></h4>
+                              </div>
+                              <div class="frame">
+                                <ul>
+                                  
+                                </ul>
+                                <div>
+                                  <div class="msj-rta macro">
+                                    <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
+                                      <input disabled id="chat-group-text" class="mytext" placeholder="Nhập tin nhắn"></div>
+                                      <i class="fa fa-file" style="
+                                            font-size: 26px;
+                                            padding-top: 8px;
+                                            padding-left: 77px;
+                                            float: right;
+                                        "></i>
+                                  </div>
+                                  <div style="padding:10px; margin-right: 24px;">
+                                    <span id="chat-message-submit41" class="glyphicon glyphicon-share-alt xxx"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+  
                           </div>
-                        </div>
-                        <div class="col-xs-12 bottom text-center">
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                          </div>
-                          <div class="col-xs-12 col-sm-6 emphasis">
-                            <button type="button" class="btn btn-success btn-xs"> <i class="fa fa-user">
-                              </i> <i class="fa fa-comments-o"></i> </button>
-                            <button type="button" class="btn btn-primary btn-xs" id="btn_nhom">
-                              <i class="fa fa-user"> </i> Chỉnh sửa
-                            </button>
-                          </div>
+  
                         </div>
                       </div>
-                    </div>
-                    
                   </div>
                 </div>
               </div>
@@ -129,9 +164,11 @@
       </div>
     </div>
   </div>
+
+
+
   <div class="modal" id="chinhsua" role="dialog">
       <div  class="modal-dialog">
-          <form method="post">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -146,35 +183,44 @@
                       <input type="text" class="form-control" value="{{ user.fullname }}" name="fullname">
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Thành viên</label>
-                    <div class="col-md-10 col-sm-10 col-xs-12">
-                      <input type="text" class="form-control" value="{{ user.fullname }}" name="fullname">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Thành viên</label>
-                    <div class="col-md-10 col-sm-10 col-xs-12">
-                      <input type="text" class="form-control" value="{{ user.fullname }}" name="fullname">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label col-md-2 col-sm-2 col-xs-12">Thành viên</label>
-                    <div class="col-md-10 col-sm-10 col-xs-12">
-                      <input type="text" class="form-control" value="{{ user.fullname }}" name="fullname">
-                    </div>
-                  </div>
+                  
                
                 <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
-               <button type="submit" class="btn btn-primary"  id="save_profile">Lưu</button>
+               <button type="submit" class="btn btn-primary"  id="save_change_group">Lưu</button>
                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>
-          </form>
       </div>
     </div>
+
+  
+    <div class="modal" id="group_random" role="dialog">
+      <div  class="modal-dialog" style="width:250px;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title" id="teacher_title">Tạo nhóm ngẫu nhiên</h4>
+            </div>
+            <div class="modal-body form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Số thành viên 1 nhóm</label><br>
+                      <input class="form-control" type="number" name="number_mem" min="0" max="100" value="2" required>
+                  </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary"  id="save_create_group">Tạo</button>
+               <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_create">Đóng</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
     <script src="{% static 'js/teacher/peerjs/jquery.js' %}"></script>
     <script src="{% static 'js/teacher/peerjs/main.js' %}"></script>
 {% endblock content %}

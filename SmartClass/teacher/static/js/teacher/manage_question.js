@@ -3,18 +3,58 @@ $(document).ready(function(){
 
     $("#dang_cau_hoi").on("change", function(event){
         var dang_cau_hoi = $("#dang_cau_hoi option:selected").text();
-        $("#khung").html("");
+        if ( dang_cau_hoi.includes("Trắc nhiệm")){
+            $("#so_dap_an").prop("readonly", true);
+            var sl = $("#so_dap_an").val();
+            var da =`<br>`
+            for (var i = 0; i < sl; i++){
+                da +=`
+                <div class="row">
+                    <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                      <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                    </div>
+                    <div class="col-md-11 col-sm-12 col-xs-12 form-group">
+                      <div id="dap_an_${i}" class="answer-container nd_dap_an"></div>
+                    </div>
+                </div>
+                `
+            }
+            $("#khung_dap_an").html(da);
+            create_editor("dap_an");
+        }
+        else if ( dang_cau_hoi.includes("Điền từ")){
+            $("#so_dap_an").prop("readonly", false);
+            var sl = $("#so_dap_an").val();
+            var da = '<button class="btn btn-info" data-toggle="modal" data-target="#hd_dien_tu">Hướng dẫn</button><br>'
+            for (var i = 0; i < sl; i++){
+                da +=`
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                      <div id="dap_an_${i}" class="answer-container nd_dap_an"></div>
+                    </div>
+                </div>
+                `
+            }
+            $("#khung_dap_an").html(da);
+            create_editor("dap_an");
+        }
+        else{
+            $("#so_dap_an").prop("readonly", true);
+            $("#khung_dap_an").html("");
+        }
+    });
+
+    $("#dang_media").on("change", function(event){
+        var dang_media = $("#dang_media option:selected").text();
         var ch ='<label>Nội dung:</label>';
-        var da ='';
-        if ( dang_cau_hoi.includes("Văn bản")){
+        if ( dang_media.includes("Văn bản")){
             ch += `
             <div id="noi_dung" class="ques-container"></div>
             <br>
             `;
-            $("#khung").append(ch);
+            $("#khung_cau_hoi").html(ch);
         }
-
-        if ( dang_cau_hoi.includes("Hình ảnh")){
+        else if ( dang_media.includes("Hình ảnh")){
             ch += `
             <div class="row">
                 <div class="col-md-8 col-sm-12 col-xs-12 form-group">
@@ -27,13 +67,12 @@ $(document).ready(function(){
             </div>
             <br>
             `;
-            $("#khung").append(ch);
+            $("#khung_cau_hoi").html(ch);
             $("input[type=file]").first().change(function() {
                 readURL(this, "hinh_anh");
             });
         }
-
-        if ( dang_cau_hoi.includes("Âm thanh")){
+        else if ( dang_media.includes("Âm thanh")){
             ch += `
             <div class="row">
                 <div class="col-md-4 col-sm-12 col-xs-12 form-group">
@@ -46,7 +85,7 @@ $(document).ready(function(){
             </div>
             <br>
             `;
-            $("#khung").append(ch);
+            $("#khung_cau_hoi").html(ch);
             var URL = window.URL || window.webkitURL;
             var playSelectedFile = function (event) {
                 var file = this.files[0];
@@ -62,8 +101,7 @@ $(document).ready(function(){
             var inputNode = document.querySelector('input[type=file]');
             inputNode.addEventListener('change', playSelectedFile, false);
         }
-
-        if ( dang_cau_hoi.includes("Video")){
+        else{
             ch += `
             <div class="row">
                 <div class="col-md-8 col-sm-12 col-xs-12 form-group">
@@ -76,7 +114,7 @@ $(document).ready(function(){
             </div>
             <br>
             `;
-            $("#khung").append(ch);
+            $("#khung_cau_hoi").html(ch);
             var URL = window.URL || window.webkitURL;
             var playSelectedFile = function (event) {
                 var file = this.files[0];
@@ -92,99 +130,96 @@ $(document).ready(function(){
             var inputNode = document.querySelector('input[type=file]');
             inputNode.addEventListener('change', playSelectedFile, false);
         }
+        create_editor("noi_dung");
+    });
 
-        if (dang_cau_hoi.includes("Trắc nhiệm")){
+    $("#so_dap_an").on("change", function(event){
+        var sl = $("#so_dap_an").val();
+        var da = '<button class="btn btn-info" data-toggle="modal" data-target="#hd_dien_tu">Hướng dẫn</button><br>'
+        for (var i = 0; i < sl; i++){
             da +=`
-            <br>
             <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <div id="dap_an_A" class="answer-container nd_dap_an"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                  <div id="dap_an_${i}" class="answer-container nd_dap_an"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <div id="dap_an_B" class="answer-container nd_dap_an"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <div id="dap_an_C" class="answer-container nd_dap_an"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                  <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
-                </div>
-                <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                  <div id="dap_an_D" class="answer-container nd_dap_an"></div>
-                </div>
-            </div>
-            `;
-            $("#khung").append(da);
+            `
         }
-        create_editor("noi_dung dap_an");
-
+        $("#khung_dap_an").html(da);
+        create_editor("dap_an");
     });
 
     $("#luu_cau_hoi").on("click", function(event){
+        var formData = new FormData();
+        formData.append('csrfmiddlewaretoken',$("input[name=csrfmiddlewaretoken]").val());
+        formData.append('mon',$("#mon option:selected").text());
         var chu_de = $("#chu_de").val();
         if(chu_de == ''){
             alert("Chưa có chủ đề");
             return false;
         }
+        formData.append('chu_de',chu_de);
         var noi_dung = $("#noi_dung .ql-editor").html();
-        if(noi_dung == ''){
+        if(noi_dung == '<p><br></p>'){
             alert("Chưa nhập nội dung");
             return false;
         }
-        var dap_an = [];
-        $("#khung .dap_an").each(function(){
-            if ($(this).is(':checked')){
-                dap_an.push(1);
-            }else{
-                dap_an.push(0);
-            }
-        });
-        if (jQuery.inArray( 1, dap_an) == -1){
-            alert("Chưa chọn đáp án đúng");
-            return false;
-        }
-        var nd_dap_an = [];
-        $("#khung .nd_dap_an .ql-editor").each(function(){
-            nd_dap_an.push($(this).html());
-        });
-
-        if (jQuery.inArray( "", nd_dap_an) != -1){
-            alert("Chưa nhập nội dung đáp án");
-            return false;
-        }
-
-        var formData = new FormData();
-        formData.append('csrfmiddlewaretoken',$("input[name=csrfmiddlewaretoken]").val());
-        formData.append('mon',$("#mon option:selected").text());
-        formData.append('chu_de',chu_de);
-        formData.append('dang_cau_hoi',$("#dang_cau_hoi option:selected").text());
-        formData.append('do_kho',$("#do_kho option:selected").text());
         formData.append('noi_dung',noi_dung);
-        formData.append('dap_an',JSON.stringify(dap_an));
-        formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
-        if (typeof($("input[type=file]")[0]) == "undefined"){
+        var dang_cau_hoi = $("#dang_cau_hoi option:selected").text();
+        var dang_media = $('#dang_media option:selected').text();
+        if (dang_cau_hoi.includes("Trắc nhiệm")){
+            var dap_an = [];
+            $(".dap_an").each(function(){
+                if ($(this).is(':checked')){
+                    dap_an.push(1);
+                }else{
+                    dap_an.push(0);
+                }
+            });
+            if (jQuery.inArray( 1, dap_an) == -1){
+                alert("Chưa chọn đáp án đúng");
+                return false;
+            }
+            formData.append('dap_an',JSON.stringify(dap_an));
 
-        }else if (typeof($("input[type=file]")[0].files[0]) == "undefined"){
-            alert("Chưa chọn file");
-            return false;
-        }else{
-            formData.append('dinh_kem',$("input[type=file]")[0].files[0]);
+            var nd_dap_an = [];
+            $(".nd_dap_an .ql-editor").each(function(){
+                nd_dap_an.push($(this).html());
+            });
+            if (jQuery.inArray("<p><br></p>", nd_dap_an) != -1){
+                alert("Chưa nhập nội dung đáp án");
+                return false;
+            }
+            formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
+            formData.append('dang_cau_hoi',dang_media + " + " + dang_cau_hoi);
+
         }
+        else if(dang_cau_hoi.includes("Điền từ")){
+            var nd_dap_an = [];
+            $(".nd_dap_an .ql-editor").each(function(){
+                nd_dap_an.push($(this).html());
+            });
+            if (jQuery.inArray("<p><br></p>", nd_dap_an) != -1){
+                alert("Chưa nhập nội dung đáp án");
+                return false;
+            }
+            formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
+            formData.append('dang_cau_hoi',dang_media + " + " + dang_cau_hoi + " + " + $("#so_dap_an").val()+ " từ");
+        }else{
+            formData.append('dang_cau_hoi',dang_media + " + " + dang_cau_hoi);
+        }
+
+        formData.append('do_kho',$("#do_kho option:selected").text());
+
+        if(!dang_media.includes("Văn bản")){
+            if (typeof($("input[type=file]")[0].files[0]) == "undefined"){
+                alert("Chưa chọn file");
+                return false;
+            }else{
+                formData.append('dinh_kem',$("input[type=file]")[0].files[0]);
+            }
+        }
+
         $("#processing").modal({backdrop: 'static', keyboard: false});
         $.ajax({
             xhr: function() {
@@ -207,10 +242,10 @@ $(document).ready(function(){
             processData: false,
             success : function(){
                 $("#noi_dung .ql-editor").empty();
-                $("#khung .dap_an").each(function(){
+                $(".dap_an").each(function(){
                     $(this).prop('checked', false);
                 });
-                $("#khung .nd_dap_an .ql-editor").each(function(){
+                $(".nd_dap_an .ql-editor").each(function(){
                     $(this).empty();
                 });
                 table_question.ajax.reload(null, false);
@@ -295,36 +330,46 @@ $(document).ready(function(){
     });
 
     $("#edit_question").on('click', function(event){
-        var noi_dung = $("#noi_dung_modal .ql-editor").html();
-        if(noi_dung == ''){
-            alert("Chưa nhập nội dung");
-            return false;
-        }
-
-        var dap_an = [];
-        $("#khung_modal .dap_an").each(function(){
-            if ($(this).is(':checked')){
-                dap_an.push(1);
-            }else{
-                dap_an.push(0);
-            }
-        });
-        var nd_dap_an = [];
-        $("#khung_modal .nd_dap_an .ql-editor").each(function(){
-            nd_dap_an.push($(this).html());
-        });
         var formData = new FormData();
         formData.append('csrfmiddlewaretoken',$("input[name=csrfmiddlewaretoken]").val());
         formData.append('edit',"");
         formData.append('id',$("#khung_modal input[name=id]").val());
+        var noi_dung = $("#noi_dung_modal .ql-editor").html();
         formData.append('noi_dung',noi_dung);
-        formData.append('dap_an',JSON.stringify(dap_an));
-        formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
-        if (typeof($("input[type=file]")[0]) == "undefined"){
-        }else if (typeof($("input[type=file]")[0].files[0]) == "undefined"){
-        }else{
+        if(noi_dung == ''){
+            alert("Chưa nhập nội dung");
+            return false;
+        }
+        var dang_cau_hoi = $("#khung_modal input[name=dang_cau_hoi]").val();
+        if (dang_cau_hoi.includes("Trắc nhiệm")){
+            var dap_an = [];
+            $("#khung_modal .dap_an").each(function(){
+                if ($(this).is(':checked')){
+                    dap_an.push(1);
+                }else{
+                    dap_an.push(0);
+                }
+            });
+            formData.append('dap_an',JSON.stringify(dap_an));
+            var nd_dap_an = [];
+            $("#khung_modal .nd_dap_an .ql-editor").each(function(){
+                nd_dap_an.push($(this).html());
+            });
+            formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
+        }
+
+        else if (dang_cau_hoi.includes("Điền từ")){
+            var nd_dap_an = [];
+            $("#khung_modal .nd_dap_an .ql-editor").each(function(){
+                nd_dap_an.push($(this).html());
+            });
+            formData.append('nd_dap_an',JSON.stringify(nd_dap_an));
+        }
+
+        if(!dang_cau_hoi.includes("Văn bản")&&(typeof($("input[type=file]")[0].files[0]) != "undefined")){
             formData.append('dinh_kem',$("input[type=file]")[0].files[0]);
         }
+
         $("#processing").modal({backdrop: 'static', keyboard: false});
         $.ajax({
             xhr: function() {
@@ -388,10 +433,9 @@ function create_editor(kind){
     }
 
     if (kind.includes('dap_an')){
-        var quill1 = new Quill('#dap_an_A', options);
-        var quill2 = new Quill('#dap_an_B', options);
-        var quill3 = new Quill('#dap_an_C', options);
-        var quill4 = new Quill('#dap_an_D', options);
+        $(".nd_dap_an").each(function(index){
+            var quill = new Quill('#dap_an_'+index, options);
+        });
     }
 }
 
@@ -401,23 +445,37 @@ function create_editor_modal(kind){
     }
 
     if (kind.includes('dap_an')){
-        var quill1_modal = new Quill('#dap_an_A_modal', options);
-        var quill2_modal = new Quill('#dap_an_B_modal', options);
-        var quill3_modal = new Quill('#dap_an_C_modal', options);
-        var quill4_modal = new Quill('#dap_an_D_modal', options);
+        $("#khung_modal .nd_dap_an").each(function(index){
+            var quill1_modal = new Quill('#dap_an_'+index+'_modal', options);
+        });
     }
 }
 
-thisRespondHightlightText(".select--highlight--active");
 
-
-function thisRespondHightlightText(thisDiv){
-    $(thisDiv).on("mouseup", function () {
+function select(){
+    $("#noi_dung .ql-editor p").each(function(){
         var selectedText = getSelectionText();
-        console.log(selectedText);
+        if (!selectedText.replace(/\s/g, '').length) {
+            return false;
+        }
+        if(($("#noi_dung .ql-editor").text().match(/[(][.]{6}[)]/g) || []).length >= $("#so_dap_an").val()){
+            alert("Đã đủ số từ");
+            return false;
+        }
         var selectedTextRegExp = new RegExp(selectedText,"g");
-        var text = $(this).text().replace(selectedTextRegExp, " (...) ");
+        var text = $(this).text().replace(selectedTextRegExp, " (......) ");
         $(this).html(text);
+        fill(selectedText);
+
+    })
+}
+
+function fill(text){
+    $("#khung_dap_an .ql-editor").each(function(){
+        if($(this).html()=="<p><br></p>"){
+            $(this).html(text);
+            return false;
+        }
     });
 }
 

@@ -108,7 +108,6 @@ def mon(request, id):
 
 def score_data(request):
     user = request.user
-
     if user.is_authenticated and user.position == 0:
         data = []
         for mon in Mon.objects.all():
@@ -122,9 +121,9 @@ def score_data(request):
             for diem in list_score:
                 if diem.diem < 5.0:
                     loai = "danger"
-                elif diem.diem >= 5.0 and diem.diem < 6.5 :
+                elif diem.diem >= 5.0 and diem.diem < 6.5:
                     loai = "warning"
-                elif diem.diem >= 6.5 and diem.diem < 8.0 :
+                elif diem.diem >= 6.5 and diem.diem < 8.0:
                     loai = "info"
                 else:
                     loai = "success"
@@ -203,36 +202,51 @@ def exam(request):
         if request.method == "POST":
             de = De.objects.get(id=request.POST['de_id'])
             dap_an_id = json.loads(request.POST['dap_an_id'])
+            dien_tu = json.loads(request.POST['dien_tu'])
             s_dung = 0
             bai_lam = ''
             for i, ch in enumerate(ChiTietDe.objects.filter(de_id=de)):
-                tempt = '\n'
+                tempt = ''
                 media = ''
                 if "Hình ảnh" in ch.cau_hoi_id.dang_cau_hoi:
-                    media = '<img style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{}" alt="không tồn tại" /><br>'.format(
-                        ch.cau_hoi_id.dinh_kem)
+                    media = '<img style="max-height:600px;max-width:600px; display: block; margin-left: auto;margin-right: auto;" src="/media/{}" alt="không tồn tại" /><br>'.format(ch.cau_hoi_id.dinh_kem)
                 elif "Âm thanh" in ch.cau_hoi_id.dang_cau_hoi:
                     media = '<br><audio controls width="100%" src="/media/{}"></audio>'.format(ch.cau_hoi_id.dinh_kem)
                 elif "Video" in ch.cau_hoi_id.dang_cau_hoi:
                     media = '<video controls width="100%" src="/media/{}"></video>'.format(ch.cau_hoi_id.dinh_kem)
-                for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ch.cau_hoi_id)):
-                    s = chr(ord(str(k)) + 17)
-                    dung = ''
-                    if da.dap_an_dung:
-                        dung += '(Đúng)'
-                        if da.id in dap_an_id:
-                            dung += '(Chọn)'
+                if "Trắc nhiệm" in ch.cau_hoi_id.dang_cau_hoi:
+                    nd_cau_hoi = ch.cau_hoi_id.noi_dung
+                    for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ch.cau_hoi_id)):
+                        s = chr(ord(str(k)) + 17)
+                        dung = ''
+                        if da.dap_an_dung:
+                            dung += '(Đúng)'
+                            if da.id in dap_an_id:
+                                dung += '(Chọn)'
+                                s_dung += 1
+                        else:
+                            if da.id in dap_an_id:
+                                dung += '(Chọn)'
+                        result = re.search('<p>(.*)</p>', da.noi_dung)
+                        tempt += '<p>{0}: {1}{2}</p>'.format(s, result.group(1), dung)
+                elif "Điền từ" in ch.cau_hoi_id.dang_cau_hoi:
+                    nd_cau_hoi = ch.cau_hoi_id.noi_dung
+                    for k, da in enumerate(DapAn.objects.filter(cau_hoi_id=ch.cau_hoi_id)):
+                        color = ''
+                        result = re.search('<p>(.*)</p>', da.noi_dung)
+                        if re.match(dien_tu[str(da.id)], result.group(1), re.IGNORECASE):
                             s_dung += 1
-                    else:
-                        if da.id in dap_an_id:
-                            dung += '(Chọn)'
-                    result = re.search('<p>(.*)</p>', da.noi_dung)
-                    tempt += '<p>{0}: {1}{2}</p>'.format(s, result.group(1), dung)
+                            color = 'lime'
+                        else:
+                            color = 'red'
+                        nd_cau_hoi = nd_cau_hoi.replace("...({})...".format(k + 1),
+                                                        ''' <font color="{0}">{1}</font> '''.format(color, dien_tu[str(da.id)]))
+                        tempt += '<p>({0}): {1}</p>'.format(k+1, result.group(1))
                 bai_lam += '''
                 <label>Câu hỏi {0}:</label>
                 {3}
                 <ul class="list-unstyled msg_list"><li><a>{1}{2}</a></li></ul>
-                '''.format(i + 1, ch.cau_hoi_id.noi_dung, tempt, media)
+                '''.format(i + 1, nd_cau_hoi, tempt, media)
             DiemSo.objects.create(de_id=de, myuser_id=user, mon_id=de.mon_id, loai_diem=de.loai_de, bai_lam=bai_lam,
                                   diem=round(s_dung/ChiTietDe.objects.filter(de_id=de).count(), 3)*10)
         content = {'mon': lop_mon(user),
@@ -249,7 +263,7 @@ def exam_data(request, id):
         left_content = ''
         right_content = ''
         for i, ques in enumerate(list_ques):
-            dap_an = '\n'
+            dap_an = ''
             left_content += '''
             <div class="mail_list">
                 <a href="#cau_{0}" id="stt_{0}">
@@ -266,26 +280,52 @@ def exam_data(request, id):
             elif "Video" in ques.cau_hoi_id.dang_cau_hoi:
                 media = '<video controls width="100%" src="/media/{}"></video>'.format(ques.cau_hoi_id.dinh_kem)
             list_dap_an = DapAn.objects.filter(cau_hoi_id=ques.cau_hoi_id)
-            for k, da in enumerate(list_dap_an):
-                s = chr(ord(str(k)) + 17)
-                result = re.search('<p>(.*)</p>', da.noi_dung)
-                dap_an += '''<div class="row">
-                    <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                      <input type="radio" class="form-control" data-id="{0}" data-ch_id="{1}" data-da_id="{4}" style="transform:scale(0.6);" name="dap_an_{1}">
+            if "Trắc nhiệm" in ques.cau_hoi_id.dang_cau_hoi:
+                for k, da in enumerate(list_dap_an):
+                    s = chr(ord(str(k)) + 17)
+                    result = re.search('<p>(.*)</p>', da.noi_dung)
+                    dap_an += '''<div class="row">
+                        <div class="col-md-1 col-sm-12 col-xs-12 form-group">
+                          <input type="radio" class="form-control" data-id="{0}" data-ch_id="{1}" data-da_id="{4}" style="transform:scale(0.6);" name="dap_an_{1}">
+                        </div>
+                        <div class="col-md-11 col-sm-12 col-xs-12 form-group">
+                            <ul class="list-unstyled msg_list"><li><a>{2}: {3}</a></li></ul>
+                        </div>
+                    </div>'''.format(i+1, ques.cau_hoi_id.id, s, result.group(1), da.id)
+                right_content += '''
+                    <div id="cau_{0}">
+                        <label>Câu hỏi {0}:</label>
+                        {3}
+                        <ul class="list-unstyled msg_list"><li><a>{1}</a></li></ul>
+                        {2}
                     </div>
-                    <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                        <ul class="list-unstyled msg_list"><li><a>{2}: {3}</a></li></ul>
+                <div>
+                '''.format(i + 1, ques.cau_hoi_id.noi_dung, dap_an, media)
+            elif "Điền từ" in ques.cau_hoi_id.dang_cau_hoi:
+                nd_cau_hoi = ques.cau_hoi_id.noi_dung
+                for k, da in enumerate(list_dap_an):
+                    nd_cau_hoi = nd_cau_hoi.replace("...({})...".format(k+1), '''<input type="text" data-id="{0}" data-ch_id="{1}" data-da_id="{2}" name="dap_an_{1}">'''.format(i+1, ques.cau_hoi_id.id, da.id, k+1))
+                right_content += '''
+                    <div id="cau_{0}">
+                        <label>Câu hỏi {0}:</label>
+                        {2}
+                        <ul class="list-unstyled msg_list"><li><a>{1}</a></li></ul>
                     </div>
-                </div>'''.format(i+1, ques.cau_hoi_id.id, s, result.group(1), da.id)
-            right_content += '''
-                <div id="cau_{0}">
-                    <label>Câu hỏi {0}:</label>
-                    {3}
-                    <ul class="list-unstyled msg_list"><li><a>{1}</a></li></ul>
-                    {2}
-                </div>
-            <div>
-            '''.format(i+1, list_ques[i].cau_hoi_id.noi_dung, dap_an, media)
+                <div>
+                '''.format(i + 1, nd_cau_hoi, media)
+            elif "Tự luận" in ques.cau_hoi_id.dang_cau_hoi:
+                dap_an += '''
+                <textarea class="form-control" cols="100" rows="10" data-id="{0}" data-ch_id="{1}" name="dap_an_{1}"></textarea>
+                '''.format(i+1, ques.cau_hoi_id.id, s)
+                right_content += '''
+                    <div id="cau_{0}">
+                        <label>Câu hỏi {0}:</label>
+                        {2}
+                        <ul class="list-unstyled msg_list">
+                        <li><a>{1}{3}</a></li>
+                    </div>
+                <div>
+                '''.format(i + 1, ques.cau_hoi_id.noi_dung, media, dap_an)
         content = '''
         <div class="col-sm-1 mail_list_column">{0}</div>
         <div class="col-sm-11 mail_view showde">

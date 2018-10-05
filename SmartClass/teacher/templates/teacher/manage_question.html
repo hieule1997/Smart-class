@@ -52,18 +52,32 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <div class="col-md-3 col-sm-12 col-xs-12 form-group">
                                       <input type="text" placeholder="Chủ đề" name="chu_de" class="form-control" id="chu_de">
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 col-xs-12 form-group" >
-                                  <select name="dang_cau_hoi" class="form-control" id="dang_cau_hoi" >
-                                        <option>Văn bản + Trắc nhiệm</option>
-+                                        <option>Hình ảnh + Trắc nhiệm</option>
-+                                        <option>Âm thanh + Trắc nhiệm</option>
-+                                        <option>Video + Trắc nhiệm</option>
-+                                        <option>Văn bản + Điền từ</option>
+                                <div class="col-md-2 col-sm-12 col-xs-12 form-group" id="dang_media">
+                                    <select name="dang_media" class="form-control">
+                                        <option>Văn bản</option>
+                                        <option>Hình ảnh</option>
+                                        <option>Âm thanh</option>
+                                        <option>Video</option>
                                     </select>
+                                </div>
+
+                                <div class="col-md-2 col-sm-12 col-xs-12 form-group" >
+                                  <select name="dang_cau_hoi" class="form-control" id="dang_cau_hoi" >
+                                         <option>Trắc nhiệm</option>
+                                        <option>Điền từ vào chỗ trống</option>
+                                        <option>Tự luận</option>
+                                        <option>Ghi âm</option>
+                                        <option>Ghi hình</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-1 col-sm-12 col-xs-12 form-group" >
+                                    <input name="so_dap_an" class="form-control" id="so_dap_an" min="1" max="10" type="number" value="4" readonly>
                                 </div>
 
                                 <div class="col-md-2 col-sm-12 col-xs-12 form-group">
@@ -75,19 +89,20 @@
                                 </div>
                           </div>
                                 <br>
-                                <div class="" id="khung">
+                                <div class="" id="khung_cau_hoi">
                                     <label>Nội dung:</label>
                                     <!--<textarea class="form-control" name="noi_dung" placeholder="Nhập nội dung" rows="10"></textarea>-->
                                     <div id="noi_dung" class="ques-container"></div>
-
-                                    <br>
+                                </div>
+                                <br>
+                                <div class="" id="khung_dap_an">
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
                                             <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                                           <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>-->
-                                            <div id="dap_an_A" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_0" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -96,7 +111,7 @@
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                                           <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>-->
-                                            <div id="dap_an_B" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_1" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -105,7 +120,7 @@
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                                           <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>-->
-                                            <div id="dap_an_C" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_2" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -114,7 +129,7 @@
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                                           <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>-->
-                                            <div id="dap_an_D" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_3" class="answer-container nd_dap_an"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -183,6 +198,7 @@
         </div>
       </div>
     </div>
+
 <div class="modal" id="processing" role="dialog">
       <div  class="modal-dialog">
         <!-- Modal content-->
@@ -205,6 +221,22 @@
       </div>
     </div>
 
+<div class="modal" id="hd_dien_tu" role="dialog">
+      <div  class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Hướng dẫn tạo câu hỏi điền từ</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+      </div>
+    </div>
 
 {% endblock content %}
 {% block javascripts %}
