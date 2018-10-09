@@ -4262,3 +4262,7 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .dataTables_wrapper > .row{
   overflow:auto !important; /*prevent datatables overflowing its container*/
 }
+
+#list_std li input[type="checkbox"]{
+    margin: 5px 10px 3px 4px;
+  }

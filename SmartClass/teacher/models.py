@@ -124,6 +124,8 @@ class Truong(models.Model):
 class Lop(models.Model):
     ten = models.CharField(max_length=255)
     truong_id = models.ForeignKey('Truong', models.CASCADE, db_column='truong_id')
+    khoa_id = models.ForeignKey('Khoa', models.SET_NULL, null=True, db_column='khoa_id')
+    nien_khoa_id = models.ForeignKey('NienKhoa', models.SET_NULL, null=True, db_column='nien_khoa_id')
 
     class Meta:
         managed = True
@@ -163,10 +165,11 @@ class De(models.Model):
     myuser_id = models.ForeignKey('MyUser', models.CASCADE, null=True, db_column="myuser_id")
     mon_id = models.ForeignKey('Mon', models.CASCADE, db_column='mon_id')
     ngay_tao = models.DateField(default=timezone.now)
-    loai_de = models.TextField()
+    dung_lam = models.CharField(max_length=255)
     cau_truc = models.CharField(max_length=255)
     so_luong = models.IntegerField()
     chi_tiet_so_luong = models.CharField(max_length=255)
+    thoi_gian = models.IntegerField(null=True)
 
     class Meta:
         managed = True
@@ -175,7 +178,8 @@ class De(models.Model):
 
 class ChiTietDe(models.Model):
     de_id = models.ForeignKey('De', models.CASCADE, db_column='de_id')
-    cau_hoi_id = models.ForeignKey('CauHoi', models.CASCADE, db_column='cau_hoi_id')
+    cau_hoi_id = models.ForeignKey('CauHoi', models.CASCADE, db_column='cau_hoi_id', null=True)
+    cau_hoi_da_id = models.ForeignKey('CauHoiDa', models.CASCADE, db_column='cau_hoi_da_id', null=True)
     diem = models.FloatField()
 
     class Meta:
@@ -192,6 +196,9 @@ class CauHoi(models.Model):
     chu_de = models.CharField(max_length=255)
     dang_cau_hoi = models.CharField(max_length=255)
     dinh_kem = models.FileField(null=True, blank=True, upload_to='question_upload')
+    don = models.BooleanField()
+    dung_lam = models.CharField(max_length=255)
+    so_dap_an_dung = models.IntegerField(default=1)
 
     class Meta:
         managed = True
@@ -203,6 +210,7 @@ class DapAn(models.Model):
     mon_id = models.ForeignKey('Mon', models.CASCADE, db_column='mon_id')
     noi_dung = models.TextField()
     dap_an_dung = models.BooleanField()
+    dinh_kem = models.FileField(null=True, blank=True, upload_to='question_upload')
 
     class Meta:
         managed = True
@@ -255,8 +263,8 @@ class ChiTietNhom(models.Model):
 
 
 class Khoa(models.Model):
-    ten_khoa = models.CharField()
-    mo_ta = models.CharField()
+    ten_khoa = models.CharField(max_length=255)
+    mo_ta = models.CharField(max_length=255)
 
     class Meta:
         managed = True
@@ -264,4 +272,35 @@ class Khoa(models.Model):
 
 
 class NienKhoa(models.Model):
-    ten_nien_khoa = models.CharField()
+    ten_nien_khoa = models.CharField(max_length=255)
+    nam_hoc = models.IntegerField()
+
+    class Meta:
+        managed = True
+        db_table = 'nien_khoa'
+
+
+class CauHoiDa(models.Model):
+    myuser_id = models.ForeignKey('MyUser', models.CASCADE, null=True, db_column="myuser_id")
+    mon_id = models.ForeignKey('Mon', models.CASCADE, db_column='mon_id')
+    ngay_tao = models.DateField(default=timezone.now)
+    noi_dung = models.TextField()
+    do_kho = models.IntegerField()  # 0: dễ, 1: trung bình, 2: khó
+    chu_de = models.CharField(max_length=255)
+    dang_cau_hoi = models.CharField(max_length=255)
+    dinh_kem = models.FileField(null=True, blank=True, upload_to='question_upload')
+    so_cau_hoi = models.IntegerField()
+    dung_lam = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'cau_hoi_da'
+
+
+class ChiTietCauHoiDa(models.Model):
+    cau_hoi_id = models.ForeignKey('CauHoi', on_delete=models.CASCADE, db_column='cau_hoi_id')
+    cau_hoi_da_id = models.ForeignKey('CauHoiDa', on_delete=models.CASCADE, db_column='cau_hoi_da_id')
+
+    class Meta:
+        managed = True
+        db_table = 'chi_tiet_cau_hoi_da'

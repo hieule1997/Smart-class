@@ -98,8 +98,11 @@
                           <div class="col-sm-3 mail_list_column list_group_all" style="overflow-y: scroll; height:600px;">
                             
                           </div>
-                          {% comment %} <div style="display: none;" class="col-sm-9 mail_view">
+                          <div class="col-sm-9 mail_view">
                             <div class="inbox-body">
+                              <div>
+                                <h4 id="title-chat"></h4>
+                              </div>
                               <div class="frame2">
                                 <ul>
                                   
@@ -107,7 +110,7 @@
                                 <div>
                                   <div class="msj-rta macro">
                                     <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
-                                      <input id="chat-message-input41" class="mytext2" placeholder="Nhập tin nhắn"></div>
+                                      <input disabled id="chat-group-text" class="mytext2" placeholder="Nhập tin nhắn"></div>
                                       <i class="fa fa-file" style="
                                             font-size: 26px;
                                             padding-top: 8px;
@@ -117,35 +120,6 @@
                                   </div>
                                   <div style="padding:10px; margin-right: 24px;">
                                     <span id="chat-message-submit41" class="glyphicon glyphicon-share-alt zzz"></span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-  
-                          </div> {% endcomment %}
-
-                          <div class="col-sm-9 mail_view">
-                            <div class="inbox-body">
-                              <div>
-                                <h4 id="title-chat"></h4>
-                              </div>
-                              <div class="frame">
-                                <ul>
-                                  
-                                </ul>
-                                <div>
-                                  <div class="msj-rta macro">
-                                    <div class="text text-r" style="background:whitesmoke !important; width: 95% !important;">
-                                      <input disabled id="chat-group-text" class="mytext" placeholder="Nhập tin nhắn"></div>
-                                      <i class="fa fa-file" style="
-                                            font-size: 26px;
-                                            padding-top: 8px;
-                                            padding-left: 77px;
-                                            float: right;
-                                        "></i>
-                                  </div>
-                                  <div style="padding:10px; margin-right: 24px;">
-                                    <span id="chat-message-submit41" class="glyphicon glyphicon-share-alt xxx"></span>
                                   </div>
                                 </div>
                               </div>
@@ -208,13 +182,46 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label>Số thành viên 1 nhóm</label><br>
-                      <input class="form-control" type="number" name="number_mem" min="0" max="100" value="2" required>
+                      <input class="form-control" type="number" name="number_mem" min="1" max="4" value="2" required>
                   </div>
                 <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
                <button type="submit" class="btn btn-primary"  id="save_create_group">Tạo</button>
                <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_create">Đóng</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="group_manual" role="dialog">
+      <div class="modal-dialog" style="width:335px;">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title" id="teacher_title">Tạo nhóm</h4>
+            </div>
+            <div class="modal-body form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label><b>Tên nhóm</b></label><br>
+                    <input style="width: 300px;" class="form-control" type="text" placeholder="Nhập tên nhóm" name="groupname" required><br>
+                    <font id="nameerr" color="red"></font><br>
+
+                    <label for="agent"><b>Chọn các thành viên</b></label><br>
+                        <input style="min-width: 300px;" class="form-control" type="text" id="search_std" name="search" placeholder="Nhập tên thành viên">
+                      <br>
+                    <div>
+                        <ol id="list_std">
+                        </ol> 
+                    </div>
+                  </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary"  id="save_create_group_manual">Tạo</button>
+               <button type="button" class="btn btn-default" data-dismiss="modal" id="close_modal_create_manual">Đóng</button>
             </div>
         </div>
       </div>
@@ -229,4 +236,13 @@
   {{ block.super }}
   <script src="{% static 'js/teacher/manage_class.js' %}"></script>
   <script src="{% static 'js/teacher/peerjs/peer.js' %}"></script>
+  
+
+  <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
+  <script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>
+  <!-- CSS file -->
+  <link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">
+  <link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">
+  <link href="{% static 'css/easy-autocomplete.themes.min.css' %}" rel="stylesheet">
 {% endblock javascripts %}

@@ -18,13 +18,14 @@ $(document).ready(function(){
     $("#point").on('show.bs.modal', function(event){
         var button = $(event.relatedTarget);
         var id_diem = button.data('id');
-        $.ajax({
-            type: "GET",
-            url: "/manage_point_detail_"+ id_diem,
-            success: function(data){
-                $("#point_data").html(data);
-            },
-        });
+        $("#point_data").load("/manage_point_detail_"+ id_diem);
+//        $.ajax({
+//            type: "GET",
+//            url: "/manage_point_detail_"+ id_diem,
+//            success: function(data){
+//                $("#point_data").html(data);
+//            },
+//        });
     });
 
 });

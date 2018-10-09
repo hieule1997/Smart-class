@@ -3,10 +3,10 @@
 {% block stylesheets %}
     {{ block.super }}
     <link href="{% static 'vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">
-    <link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">
-    <link href="{% static 'css/easy-autocomplete.themes.min.css' %}" rel="stylesheet">
+    <!--<link href="{% static 'css/easy-autocomplete.css' %}" rel="stylesheet">-->
+    <!--<link href="{% static 'css/easy-autocomplete.min.css' %}" rel="stylesheet">-->
+    <!--<link href="{% static 'css/easy-autocomplete.themes.css' %}" rel="stylesheet">-->
+    <!--<link href="{% static 'css/easy-autocomplete.themes.min.css' %}" rel="stylesheet">-->
 {% endblock stylesheets %}
 {% block content %}
   <div class="right_col" role="main">
@@ -17,8 +17,8 @@
             <div class="x_title">
                 <h2>Danh sách lớp  </h2>
 
-                <button class="btn btn-round btn-primary"  style="float:right;" data-toggle="modal" data-target="#new_class" data-title="new">
-                    <i class="fa fa-plus"></i> Tạo mới lớp
+                <button class="btn btn-round btn-primary"  style="float:right;" data-toggle="modal" data-target="#new_nien_khoa" data-title="new">
+                    <i class="fa fa-plus"></i> Tạo mới niên khóa
                 </button>
               <div class="clearfix"></div>
             </div>
@@ -26,15 +26,12 @@
             <div class="x_content">
 
               <div class="table-responsive">
-                <table class="table table-striped jambo_table bulk_action" id="list_class" width="100%">
+                <table class="table table-striped jambo_table bulk_action" id="list_nien_khoa" width="100%">
                     <thead>
                       <tr>
-                        <th>Lớp</th>
-                          <th>Khoa</th>
-                          <th>Khóa</th>
-                        <th>Giáo viên</th>
-                        <th>Học sinh</th>
-                          <th>Tùy chọn</th>
+                        <th>Khóa</th>
+                        <th>Năm học</th>
+                        <th>Tùy chọn</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -107,44 +104,30 @@
       </div>
     </div>
 
-<div class="modal" id="new_class" role="dialog">
+<div class="modal" id="new_nien_khoa" role="dialog">
       <div  class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title" id="change_class_title"></h4>
+              <h4 class="modal-title" id="change_nien_khoa_title"></h4>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
                 <input type="hidden" name="kieu">
                 <input type="hidden" name="id">
                  <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                  <input type="text" class="form-control has-feedback-left" name="ten" required placeholder="Tên lớp">
-                  <span class="fa fa-book form-control-feedback left" aria-hidden="true"></span>
+                  <input type="text" class="form-control has-feedback-left" name="khoa" required placeholder="Tên khóa">
+                  <span class="fa fa-university form-control-feedback left" aria-hidden="true"></span>
                 </div>
-                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                  <input list="ls" type="text" class="form-control has-feedback-left" name="khoa" required placeholder="Tên khoa">
-                  <span class="fa fa-cube form-control-feedback left" aria-hidden="true"></span>
-                    <datalist id="ls">
-                        {% for k in ds_khoa %}
-                        <option data-id="{{k.id}}">{{k.ten_khoa}}</option>
-                        {% endfor %}
-                    </datalist>
-                </div>
-                 <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
-                  <input list="lss" type="text" class="form-control has-feedback-left" name="nien_khoa" required placeholder="Tên khóa">
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                  <input type="number" class="form-control has-feedback-left" name="nam" required min="1990" max="2100">
                   <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
-                    <datalist id="lss">
-                        {% for k in ds_nien_khoa %}
-                        <option data-id="{{k.id}}">{{k.ten_nien_khoa}} - {{k.nam_hoc}}</option>
-                        {% endfor %}
-                    </datalist>
                 </div>
                  <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-primary" id="save_new_class">Cập nhật</button>
+               <button type="button" class="btn btn-primary" id="save_new_nien_khoa">Cập nhật</button>
                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>
@@ -154,9 +137,9 @@
 {% endblock content %}
 {% block javascripts %}
     {{ block.super }}
-    <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
-    <script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>
+    <!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
+    <!--<script src="{% static 'js/jquery.easy-autocomplete.min.js' %}"></script>-->
     <script src="{% static 'vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/adminsc/manage_class.js' %}"></script>
+    <script src="{% static 'js/adminsc/manage_nien_khoa.js' %}"></script>
 {% endblock javascripts %}

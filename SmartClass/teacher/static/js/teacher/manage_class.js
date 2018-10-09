@@ -78,8 +78,9 @@ $(document).ready(function(){
                             }
                         
                         });
-                        chatgroup.onopen = function (event) {
-                            chatgroup.close();
+                        if (dict_group_chat[chatgroup] != undefined){
+                            dict_group_chat[chatgroup].close();
+                            delete dict_group_chat[chatgroup];
                         };
                     }
                 });
@@ -90,6 +91,7 @@ $(document).ready(function(){
                 });
                 
                 click_group_chat();
+                search_std();
             }
         });
     }
@@ -106,10 +108,22 @@ $(document).ready(function(){
     $('body #btn_random_group').on('click',function(){
 		$('#group_random').modal('show');
     });
+
+    $('body #btn_manual_group').on('click',function(){
+		$('#group_manual').modal('show');
+    });
     
 
     $("body #group_random").on('show.bs.modal', function(event){
         $("input[name=number_mem]").val("2");
+    });
+
+
+    $("body #group_manual").on('show.bs.modal', function(event){
+        $("input[name=groupname]").val("");
+        $("input[name=search]").val("");
+        $("input[name=search_std]").val("");
+        $('body #list_std').empty();
     });
 
     $('body').on('click', '#save_create_group', function(){
@@ -221,67 +235,164 @@ $(document).ready(function(){
         
     })
 
+    var dict_group_chat = {};
     function click_group_chat(){
         $('.group_class').on('click',function(){
             var group_chat_name = $(this).children('p').text();
-            var chatgroup = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/' + group_chat_name + 'chatgroup/');
-    
+            if (dict_group_chat[group_chat_name] == undefined){
+                dict_group_chat[group_chat_name] = new WebSocket(
+                'ws://' + window.location.host +
+                '/ws/' + group_chat_name + 'chatgroup/');
+            }
             var group_name = $(this).children('p').next('p').text();
             $('#title-chat').html(group_name);
             $("#chat-group-text").prop('disabled', false);
-            //  var me = {};
-            //  me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
+            $(".frame2").children('ul').empty();
+            // if (typeof(Storage) !== "undefined") {
+            //     // Gán dữ liệu
+            //     sessionStorage.group_chat_name = chatgroup;
+            // } else {
+            //     document.write('Trình duyệt của bạn không hỗ trợ local storage');
+            // }
+             var me = {};
+             me.avatar = "https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/512/User_man_male_profile_account_person_people.png";
     
-            //  var you = {};
-            //  you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";      
+             var you = {};
+             you.avatar = "https://cdn2.iconfinder.com/data/icons/rcons-users-color/32/support_man-512.png";      
     
-            //  //-- No use time. It is a javaScript effect.
-            //  function insertChat2(who, text, time){
-            //      if (time === undefined){
-            //          time = 0;
-            //      }
-            //      var control = "";
-            //      var date = time;
+             //-- No use time. It is a javaScript effect.
+             function insertChat2(who, text, time){
+                 if (time === undefined){
+                     time = 0;
+                 }
+                 var control = "";
+                 var date = time;
                  
-            //      if (who == userName){
-            //         control = '<li style="padding-top: 15px;margin-left: 5em;width:75%;">' +
-            //                       '<div class="msj-rta macro" style="background-color: #BFE9F9;">' +
-            //                           '<div class="text text-r">' +
-            //                               '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
-            //                               '<p><small style="color: #444950;">'+date+'</small></p>' +
-            //                           '</div></div></li>';
-            //       }else{
-            //         control = '<li style="width:75%">' +
-            //             '<h4 style="margin-bottom: -3px;margin-left: 10%;font-size: 12px;">'+who+'</h4>'+
-            //             '<div class="avatar" style="padding:5px 0px 0px 10px !important"><img class="img-circle" style="width:90%;" src="'+me.avatar+'" /></div>'+
-            //             '<div class="msj-rta macro">' +
-            //                 '<div class="text text-r">' +
-            //                     '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
-            //                     '<p><small style="color: #444950;">'+date+'</small></p>' +
-            //                 '</div></div>' +
-            //             '</li>';
-            //       }
-            //      setTimeout(
-            //          function(){                        
-            //              $(".chat"+std_username).children('ul').append(control).scrollTop($(".chat"+std_username).children('ul').prop('scrollHeight'));
-            //          }, time);
+                 if (who == userName){
+                    control = '<li style="padding-top: 15px;margin-left: 5em;width:75%;">' +
+                                  '<div class="msj-rta macro" style="background-color: #BFE9F9;">' +
+                                      '<div class="text text-r">' +
+                                          '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
+                                          '<p><small style="color: #444950;">'+date+'</small></p>' +
+                                      '</div></div></li>';
+                  }else{
+                    control = '<li style="width:75%">' +
+                        '<h4 style="margin-bottom: -3px;margin-left: 10%;font-size: 12px;">'+who+'</h4>'+
+                        '<div class="avatar" style="padding:5px 0px 0px 10px !important"><img class="img-circle" style="width:90%;" src="'+me.avatar+'" /></div>'+
+                        '<div class="msj-rta macro">' +
+                            '<div class="text text-r">' +
+                                '<p style="color: #444950;word-break: break-all;">'+text+'</p>' +
+                                '<p><small style="color: #444950;">'+date+'</small></p>' +
+                            '</div></div>' +
+                        '</li>';
+                  }
+                 setTimeout(
+                     function(){                        
+                         $(".frame2").children('ul').append(control).scrollTop($(".frame2").children('ul').prop('scrollHeight'));
+                     }, time);
                  
-            //  }
+             }
     
              
-            //  dict_ws[std_username].onmessage = function(e) {
-            //      var data = JSON.parse(e.data);
-            //      var message = data['message'];
-            //      var who = data['who'];
-            // 	 var time = data['time'];
-            //      insertChat1(who, message, time);
-            //  };
+            dict_group_chat[group_chat_name].onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var message = data['message'];
+                var who = data['who'];
+                var time = data['time'];
+                insertChat2(who, message, time);
+             };
+
+            $('body').on('click', '.zzz', function(){
+                $("body .mytext2").trigger({type: 'keydown', which: 13, keyCode: 13});
+            })
+            $("body .mytext2").focus();
+            $('body').on('keyup', '.mytext2', function(e){
+                if (e.keyCode === 13) {
+                    $(this).parent().parent().next().children('span').click();
+                }
+            })
+            $('body').on('click', '.zzz', function(){
+                var message = $(this).parent().parent().children().children().children('input').val();
+                message = escapeHtml(message);
+                var date = formatAMPM(new Date());
+                if (message != ''){
+                    dict_group_chat[group_chat_name].send(JSON.stringify({
+                        'message' : message,
+                        'who' : userName,
+                        'time' : date
+                    }));
+                }
+                $(this).parent().parent().children().children().children('input').val('');
+                
+            })
     
-         });
+        });
+    
     }
     
+    function search_std(){
+        var options_std = {
+            url: "/std/"+class_,
+            getValue: function(element){
+                return element.fullname;
+             },
+            template: {
+                type: "description",
+                fields: {
+                    description: "username"
+                }
+            },
+            
+            list: {
+                match: {
+                    enabled: true
+                },
+                onChooseEvent: function() {
+                    var fullname = $("#search_std").getSelectedItemData().fullname;
+                    var username = $("#search_std").getSelectedItemData().username;
+                    var element = '<li style="list-style: none;" ><input style="transform: scale(1.3)" type="checkbox" class="check_agent" name="'+username+'" value="'+username+'" checked >'+fullname+'</li>';
+                    var list_old = $("#list_std").text();
+                    if (list_old.includes(fullname) == false){
+                        $('#list_std').append(element);
+                    }
+                    $("#search_std").val("");
+                }
+            },
+            theme: "square"
+        };
+        $("#search_std").easyAutocomplete(options_std);
+
+        $('body #list_std').on('change', '.check_agent', function() {
+            $(this).parent().remove();
+        });
+    }
+
+    $("#save_create_group_manual").click(function() {
+        var token = $("input[name=csrfmiddlewaretoken]").val();
+        var groupname = $("input[name=groupname]").val();
+        var list_std = [];
+        var date = formatAMPM(new Date());
+        $('#group_manual input:checkbox').each(function() {
+            if ($(this).is(":checked")){
+                list_std.push(this.name);
+            }
+        });
+        $("#nameerr").html("");
+        if (groupname==''){
+            $("#nameerr").html("Vui lòng không để trống");
+        }else{
+            $.ajax({
+                type:'POST',
+                url:location.href,
+                data: {'list_std[]': JSON.stringify(list_std), 'groupname': groupname, 'csrfmiddlewaretoken':token},
+                success: function(){
+                    document.getElementById("close_modal_create_manual").click();
+                    reload();
+                }
+            });
+        }
+    });
+
 
     
 });

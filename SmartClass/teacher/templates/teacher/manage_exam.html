@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="{% static 'math/katex.css' %}" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'math/monokai-sublime.min.css' %}" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'math/quill/quill.snow.css' %}" rel="stylesheet"/>
-    <style>
-    .mytable > td {
-        border: 1px solid #E6E9ED;
-        border-collapse: collapse;
-        padding: 5px;
-        text-align: center;
-    }
-    </style>
+      <style>
+      .mytable > td {
+          border: 1px solid #E6E9ED;
+          border-collapse: collapse;
+          padding: 5px;
+          text-align: center;
+      }
+      </style>
 {% endblock stylesheets %}
 {% block content %}
 <div class="right_col" role="main">
@@ -26,20 +26,17 @@
                 {% csrf_token %}
                 <div class="" role="tabpanel" data-example-id="togglable-tabs">
                     <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                      <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Tạo đề thi</a>
+                      <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Tạo đề bằng tay</a>
                       </li>
-                      <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Đề thi đã tạo</a>
+                        <li role="presentation" class=""><a href="#tab_content2" id="abc-tab" role="tab" data-toggle="tab" aria-expanded="true">Tạo đề ngẫu nhiên</a>
+                      </li>
+                      <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Đề đã tạo</a>
                       </li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
                             <div class="x_panel">
-                                <div class="x_title">
-                                  <h2>Đề thi</h2>
-                                  <div class="clearfix"></div>
-                                </div>
                                 <div class="x_content">
-
                                   <div id="wizard" class="form_wizard wizard_horizontal">
                                     <ul class="wizard_steps">
                                       <li>
@@ -102,10 +99,21 @@
                                                     </div>
                                                     <div class="col-md-9">
                                                         <select class="form-control" id="loai_de">
-                                                            <option value="kiểm tra 15'">Kiểm tra 15'</option>
-                                                            <option value="kiểm tra 1 tiết">Kiểm tra 1 tiết</option>
+                                                            <option value="bài tập">Bài tập</option>
                                                             <option value="thi">Thi</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-3" >
+                                                        <h5><b>Thời gian</b></h5>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input type="number" name="thoi_gian" class="form-control" min="5" max="200" value="15">
+                                                    </div>
+                                                    <div class="col-md-2" >
+                                                        <h5>(phút)</h5>
                                                     </div>
                                                 </div>
                                                 <br>
@@ -149,26 +157,26 @@
                                                                     <input type="number" class="form-control phan_tram" min=0 max=100 name="pt_tl" value="0" disabled>
                                                                 </td>
                                                             </tr>
-                                                            <tr class="mytable">
-                                                                <td><input type="checkbox" id="ck_ga" style="transform:scale(1.3)"></td>
-                                                                <td><b>Ghi âm</b></td>
-                                                                <td>
-                                                                    <input type="number" class="form-control so_luong" min=0 max=100 name="sl_ga" value="0" disabled>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" class="form-control phan_tram" min=0 max=100 name="pt_ga" value="0" disabled>
-                                                                </td>
-                                                            </tr>
-                                                            <tr class="mytable">
-                                                                <td><input type="checkbox" id="ck_gh" style="transform:scale(1.3)"></td>
-                                                                <td><b>Ghi hình</b></td>
-                                                                <td>
-                                                                    <input type="number" class="form-control so_luong" min=0 max=100 name="sl_gh" value="0" disabled>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" class="form-control phan_tram" min=0 max=100 name="pt_gh" value="0" disabled>
-                                                                </td>
-                                                            </tr>
+                                                            <!--<tr class="mytable">-->
+                                                                <!--<td><input type="checkbox" id="ck_ga" style="transform:scale(1.3)"></td>-->
+                                                                <!--<td><b>Ghi âm</b></td>-->
+                                                                <!--<td>-->
+                                                                    <!--<input type="number" class="form-control so_luong" min=0 max=100 name="sl_ga" value="0" disabled>-->
+                                                                <!--</td>-->
+                                                                <!--<td>-->
+                                                                    <!--<input type="number" class="form-control phan_tram" min=0 max=100 name="pt_ga" value="0" disabled>-->
+                                                                <!--</td>-->
+                                                            <!--</tr>-->
+                                                            <!--<tr class="mytable">-->
+                                                                <!--<td><input type="checkbox" id="ck_gh" style="transform:scale(1.3)"></td>-->
+                                                                <!--<td><b>Ghi hình</b></td>-->
+                                                                <!--<td>-->
+                                                                    <!--<input type="number" class="form-control so_luong" min=0 max=100 name="sl_gh" value="0" disabled>-->
+                                                                <!--</td>-->
+                                                                <!--<td>-->
+                                                                    <!--<input type="number" class="form-control phan_tram" min=0 max=100 name="pt_gh" value="0" disabled>-->
+                                                                <!--</td>-->
+                                                            <!--</tr>-->
                                                         </table>
                                                 </div>
                                             </div>
@@ -182,8 +190,8 @@
                                                     <td id="max_tn">Trắc nhiệm: /</td>
                                                     <td id="max_dt">Điền từ: /</td>
                                                     <td id="max_tl">Tự luận: /</td>
-                                                    <td id="max_ga">Ghi âm: /</td>
-                                                    <td id="max_gh">Ghi hình: /</td>
+                                                    <!--<td id="max_ga">Ghi âm: /</td>-->
+                                                    <!--<td id="max_gh">Ghi hình: /</td>-->
                                                 </tr>
                                             </table>
                                         </div>
@@ -226,6 +234,7 @@
                                                                 <th>ID</th>
                                                                 <th>Chủ đề</th>
                                                                 <th>Dạng câu hỏi</th>
+                                                                <th>Số câu hỏi</th>
                                                                 <th>Độ khó</th>
                                                                 <th>Người tạo</th>
                                                                 <th>Ngày tạo</th>
@@ -249,7 +258,133 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="abc-tab">
+                            <div class="x_content">
+                                <div class="">
+                                    <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5><b>Tên đề</b></h5>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control" name="r_ten_de" placeholder="Tên đề">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-3" >
+                                                        <h5><b>Môn</b></h5>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select class="form-control" id="r_gv_mon">
+                                                            {% for mon in list_mon %}
+                                                            <option value="{{ mon.mon_id.id }}">{{ mon.mon_id.ten }} - {{mon.mon_id.lop}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-3" >
+                                                        <h5><b>Loại đề</b></h5>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <select class="form-control" id="r_loai_de">
+                                                            <option value="bài tập">Bài tập</option>
+                                                            <option value="thi">Thi</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-3" >
+                                                        <h5><b>Thời gian</b></h5>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input type="number" name="r_thoi_gian" class="form-control" min="5" max="200" value="15">
+                                                    </div>
+                                                    <div class="col-md-2" >
+                                                        <h5>(phút)</h5>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row " >
+                                                    <table style="width: 100%;"  class="mytable">
+                                                            <tr class="mytable">
+                                                                <td><b>Chọn</b></td>
+                                                                <td><b>Loại câu hỏi</b></td>
+                                                                <td><b>Số câu dễ</b></td>
+                                                                <td><b>Số câu trung bình</b></td>
+                                                                <td><b>Số câu khó</b></td>
+                                                                <td><b>% điểm</b></td>
+                                                            </tr>
+                                                            <tr class="mytable">
+                                                                <td><input type="checkbox" name="r_trac_nhiem" style="transform:scale(1.3)" class="r_check"></td>
+                                                                <td>
+                                                                    <b> Trắc nhiệm</b>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_trac_nhiem r_so_luong" min=0 max=100 name="r_tn_d" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_trac_nhiem r_so_luong" min=0 max=100 name="r_tn_tb" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_trac_nhiem r_so_luong" min=0 max=100 name="r_tn_k" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_trac_nhiem r_phan_tram" min=0 max=100 name="r_pt_tn" value="0" disabled>
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr class="mytable">
+                                                                <td><input type="checkbox" name="r_dien_tu" style="transform:scale(1.3)" class="r_check"></td>
+                                                                <td><b>Điền từ</b></td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_dien_tu r_so_luong" min=0 max=100 name="r_dt_d" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_dien_tu r_so_luong" min=0 max=100 name="r_dt_tb" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_dien_tu r_so_luong" min=0 max=100 name="r_dt_k" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_dien_tu r_phan_tram" min=0 max=100 name="r_pt_dt" value="0" disabled>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="mytable">
+                                                                <td><input type="checkbox" name="r_tu_luan" style="transform:scale(1.3)" class="r_check"></td>
+                                                                <td><b>Tự luận</b></td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_tu_luan r_so_luong" min=0 max=100 name="r_tl_d" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_tu_luan r_so_luong" min=0 max=100 name="r_tl_tb" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_tu_luan r_so_luong" min=0 max=100 name="r_tl_k" value="0" disabled>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" class="form-control r_phan_tram r_tu_luan" min=0 max=100 name="r_pt_tl" value="0" disabled>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <button class="btn btn-success" style="width:100%" id="r_tao_de"><i class="fa fa-random"></i> Tạo đề</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2"></div>
+
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
                             <div class="x_content">
                                 <div class="">
                                     <table class="table table-striped jambo_table bulk_action" id="list_exam" width="100%">
@@ -258,6 +393,7 @@
                                                 <th>Môn</th>
                                                 <th>Tên đề</th>
                                                 <th>Loại đề</th>
+                                                <th>Thời gian</th>
                                                 <th>Ngày tạo</th>
                                             </tr>
                                         </thead>

@@ -79,6 +79,12 @@
                         <a href="{% url 'adminsc:manage_class' %}"><i class="fa fa-book"></i> Quản lý lớp </a>
                       </li>
                       <li>
+                        <a href="{% url 'adminsc:manage_nien_khoa' %}"><i class="fa fa-calendar"></i> Quản lý khóa </a>
+                      </li>
+                      <li>
+                        <a href="{% url 'adminsc:manage_khoa' %}"><i class="fa fa-cube"></i> Quản lý khoa </a>
+                      </li>
+                      <li>
                         <a href="{% url 'adminsc:manage_mon' %}"><i class="fa fa-calculator"></i> Quản lý môn </a>
                       </li>
                       <li>
@@ -109,8 +115,8 @@
                         <span class=" fa fa-angle-down"></span>
                       </a>
                       <ul class="dropdown-menu dropdown-usermenu pull-right">
-                        <li><a href="{% url 'adminsc:profile' %}"> Profile</a></li>
-                        <li><a href="{% url 'adminsc:logout' %}"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                        <li><a href="{% url 'adminsc:profile' %}"> Thông tin cá nhân</a></li>
+                        <li><a href="{% url 'adminsc:logout' %}"><i class="fa fa-sign-out pull-right"></i> Đăng xuất</a></li>
                       </ul>
                     </li>
 

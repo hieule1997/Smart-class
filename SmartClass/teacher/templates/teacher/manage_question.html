@@ -10,10 +10,18 @@
     <style>
         .ques-container {
             height: 200px;
-          }
+        }
         .answer-container {
             height: 50px;
-          }
+        }
+        .mytable > td {
+            border: 1px solid rgb(204, 204, 204);
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+        }
     </style>
 {% endblock stylesheets %}
 {% block content %}
@@ -36,100 +44,149 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
                             <div class="x_title">
                                 <h2>Tạo câu hỏi</h2>
-                                <button class="btn btn-primary" style="float:right">
-                                    <i class="fa fa-file-excel-o"></i> Nhập bằng excel
-                                </button>
+                                <!--<button class="btn btn-primary" style="float:right">-->
+                                    <!--<i class="fa fa-file-excel-o"></i> Nhập bằng excel-->
+                                <!--</button>-->
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
                                 <div class="row">
 
-                                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                                    <select name="mon" class="form-control" id="mon">
-                                        {% for mon in list_mon %}
-                                        <option>{{ mon.mon_id.ten }} - {{mon.mon_id.lop}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                                    <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Môn:</b></td>
+                                                <td>
+                                                    <select name="mon" class="form-control" id="mon">
+                                                        {% for mon in list_mon %}
+                                                        <option>{{ mon.mon_id.ten }} - {{mon.mon_id.lop}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
 
-                                <div class="col-md-3 col-sm-12 col-xs-12 form-group">
-                                      <input type="text" placeholder="Chủ đề" name="chu_de" class="form-control" id="chu_de">
-                                </div>
+                                    <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Chủ đề:</b></td>
+                                                <td>
+                                                    <input type="text"name="chu_de" class="form-control" id="chu_de" placeholder="nhập chủ đề">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
 
-                                <div class="col-md-2 col-sm-12 col-xs-12 form-group" id="dang_media">
-                                    <select name="dang_media" class="form-control">
-                                        <option>Văn bản</option>
-                                        <option>Hình ảnh</option>
-                                        <option>Âm thanh</option>
-                                        <option>Video</option>
-                                    </select>
+                                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Loại bài:</b></td>
+                                                <td>
+                                                  <select name="dung_lam" class="form-control" id="dung_lam">
+                                                        <option>Thi</option>
+                                                        <option>Bài tập</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="do_kho" class="form-control" id="do_kho">
+                                                        <option>Dễ</option>
+                                                        <option>Trung bình</option>
+                                                        <option>Khó</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Dạng câu hỏi:</b></td>
+                                                <td>
+                                                    <select name="dang_media" id="dang_media" class="form-control">
+                                                        <option>Văn bản</option>
+                                                        <option>Hình ảnh</option>
+                                                        <option>Âm thanh</option>
+                                                        <option>Video</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="dang_cau_hoi" class="form-control" id="dang_cau_hoi" >
+                                                         <option>Trắc nhiệm</option>
+                                                        <option>Điền từ vào chỗ trống</option>
+                                                        <option>Tự luận</option>
+                                                        <!--<option>Ghi âm</option>-->
+                                                        <!--<option>Ghi hình</option>-->
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
 
-                                <div class="col-md-2 col-sm-12 col-xs-12 form-group" >
-                                  <select name="dang_cau_hoi" class="form-control" id="dang_cau_hoi" >
-                                         <option>Trắc nhiệm</option>
-                                        <option>Điền từ vào chỗ trống</option>
-                                        <option>Tự luận</option>
-                                        <option>Ghi âm</option>
-                                        <option>Ghi hình</option>
-                                    </select>
+                                    <div class="col-md-3 col-sm-12 col-xs-12 form-group" >
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Số câu hỏi:</b></td>
+                                                <td>
+                                                    <input name="so_cau_hoi" class="form-control" id="so_cau_hoi" min="1" max="10" type="number" value="1">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-12 col-xs-12 form-group" >
+                                        <table class="mytable" style="width:100%;">
+                                            <tr class="mytable">
+                                                <td><b>Số đáp án mỗi câu:</b></td>
+                                                <td>
+                                                    <input name="so_dap_an" class="form-control" id="so_dap_an" min="1" max="10" type="number" value="4">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
                                 </div>
-
-
-                                <div class="col-md-1 col-sm-12 col-xs-12 form-group" >
-                                    <input name="so_dap_an" class="form-control" id="so_dap_an" min="1" max="10" type="number" value="4" readonly>
-                                </div>
-
-                                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                                  <select name="do_kho" class="form-control" id="do_kho">
-                                        <option>Dễ</option>
-                                        <option>Trung bình</option>
-                                        <option>Khó</option>
-                                    </select>
-                                </div>
-                          </div>
                                 <br>
                                 <div class="" id="khung_cau_hoi">
                                     <label>Nội dung:</label>
                                     <!--<textarea class="form-control" name="noi_dung" placeholder="Nhập nội dung" rows="10"></textarea>-->
-                                    <div id="noi_dung" class="ques-container"></div>
+                                    <div id="noi_dung" class="ques-container editor_nd"></div>
                                 </div>
                                 <br>
                                 <div class="" id="khung_dap_an">
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                                            <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                            <input type="checkbox" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
                                           <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="A:"></textarea>-->
-                                            <div id="dap_an_0" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_0" class="answer-container nd_dap_an editor_da"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                          <input type="checkbox" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="B:"></textarea>-->
-                                            <div id="dap_an_1" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_1" class="answer-container nd_dap_an editor_da"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                          <input type="checkbox" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="C:"></textarea>-->
-                                            <div id="dap_an_2" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_2" class="answer-container nd_dap_an editor_da"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1 col-sm-12 col-xs-12 form-group">
-                                          <input type="radio" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
+                                          <input type="checkbox" class="form-control dap_an" style="transform:scale(0.6);" name="dap_an">
                                         </div>
                                         <div class="col-md-11 col-sm-12 col-xs-12 form-group">
-                                          <!--<textarea class="form-control nd_dap_an" name="nd_dap_an" placeholder="D:"></textarea>-->
-                                            <div id="dap_an_3" class="answer-container nd_dap_an"></div>
+                                            <div id="dap_an_3" class="answer-container nd_dap_an editor_da"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -154,22 +211,22 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
-                                <div class="">
-                                    <table class="table table-striped jambo_table bulk_action" id="list_question" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>Chủ đề</th>
-                                                <th>Dạng câu hỏi</th>
-                                                <th>Độ khó</th>
-                                                <th>Ngày tạo</th>
-                                                <th>Nội dung</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                <table class="table table-striped jambo_table bulk_action" id="list_question" style="width:100;" >
+                                    <thead>
+                                        <tr>
+                                            <th>Chủ đề</th>
+                                            <th>Dạng câu hỏi</th>
+                                            <th>Số câu hỏi</th>
+                                            <th>Loại câu hỏi</th>
+                                            <th>Độ khó</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Nội dung</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                        </tbody>
-                                    </table>
-                                  </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

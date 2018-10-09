@@ -37,7 +37,7 @@ def home(request):
     user = request.user
     if user.is_authenticated and user.position == 2:
         content = {'username': mark_safe(json.dumps(user.username)),}
-        return render(request, 'adminsc/base.html', content)
+        return render(request, 'adminsc/index.html', content)
     else:
         return HttpResponseRedirect('/')
 
@@ -378,23 +378,27 @@ def manage_student_data(request, lop):
 
 def manage_class(request):
     user = request.user
-
-    content = {'username': mark_safe(json.dumps(user.username))}
-
     if user.is_authenticated and user.position == 2:
         if request.method == 'POST':
             if 'delete' in request.POST:
                 Lop.objects.get(id=request.POST['delete']).delete()
             else:
+                nien_khoa, nam = request.POST['nien_khoa'].split(" - ")
                 if request.POST['kieu'] == 'new':
                     try:
-                        Lop.objects.create(ten=request.POST['ten'], truong_id=Truong.objects.get(id=1))
+                        Lop.objects.create(ten=request.POST['ten'], truong_id=Truong.objects.get(id=1),
+                                           khoa_id=Khoa.objects.get(ten_khoa=request.POST['khoa']),
+                                           nien_khoa_id=NienKhoa.objects.get(ten_nien_khoa=nien_khoa, nam_hoc=nam))
                     except:
                         pass
                 else:
-                    hs = Lop.objects.get(id=request.POST['id'])
-                    hs.ten = request.POST['ten']
-                    hs.save()
+                    l = Lop.objects.get(id=request.POST['id'])
+                    l.ten = request.POST['ten']
+                    l.nien_khoa_id = NienKhoa.objects.get(ten_nien_khoa=nien_khoa, nam_hoc=nam)
+                    l.khoa_id = Khoa.objects.get(ten_khoa=request.POST['khoa'])
+                    l.save()
+        content = {'username': mark_safe(json.dumps(user.username)), 'ds_khoa': Khoa.objects.all(),
+                   'ds_nien_khoa': NienKhoa.objects.all()}
         return render(request, 'adminsc/manage_class.html', content)
     else:
         return HttpResponseRedirect('/')
@@ -406,6 +410,8 @@ def manage_class_data(request):
         data = []
         for lop in Lop.objects.all():
             ten = '<p id="ten_{}">{}</p>'.format(lop.id, lop.ten)
+            khoa = '<p id="khoa_{}">{}</p>'.format(lop.id, lop.khoa_id.ten_khoa)
+            nien_khoa = '<p id="nien_khoa_{}">{}</p>'.format(lop.id, lop.nien_khoa_id.ten_nien_khoa + ' - ' + str(lop.nien_khoa_id.nam_hoc))
             ls_chi_tiet = ChiTietLop.objects.filter(lop_id=lop).values('myuser_id')
             gv = '''
             {1}  <i class="fa fa-info-circle" data-title="{0}" data-toggle="modal" data-target="#detail_teacher"></i> 
@@ -423,7 +429,117 @@ def manage_class_data(request):
                     </button> 
                 </div>
             '''.format(lop.id)
-            data.append([ten, gv, hs, options])
+            data.append([ten, khoa, nien_khoa, gv, hs, options])
+        big_data = {"data": data}
+        json_data = json.loads(json.dumps(big_data))
+        return JsonResponse(json_data)
+
+
+def manage_nien_khoa(request):
+    user = request.user
+
+    content = {'username': mark_safe(json.dumps(user.username))}
+
+    if user.is_authenticated and user.position == 2:
+        if request.method == 'POST':
+            if 'delete' in request.POST:
+                NienKhoa.objects.get(id=request.POST['delete']).delete()
+            else:
+                if request.POST['kieu'] == 'new':
+                    try:
+                        NienKhoa.objects.create(ten_nien_khoa=request.POST['khoa'], nam_hoc=request.POST['nam'])
+                    except:
+                        pass
+                else:
+                    nk = NienKhoa.objects.get(id=request.POST['id'])
+                    nk.ten_nien_khoa = request.POST['khoa']
+                    nk.nam_hoc = request.POST['nam']
+                    nk.save()
+        return render(request, 'adminsc/manage_nien_khoa.html', content)
+    else:
+        return HttpResponseRedirect('/')
+
+
+def manage_nien_khoa_data(request):
+    user = request.user
+    if user.is_authenticated and user.position == 2:
+        data = []
+        for khoa in NienKhoa.objects.all():
+            ten = '<p id="ten_{}">{}</p>'.format(khoa.id, khoa.ten_nien_khoa)
+            nam = '<p id="nam_{}">{}</p>'.format(khoa.id, khoa.nam_hoc)
+            # ls_chi_tiet = ChiTietLop.objects.filter(lop_id=khoa).values('myuser_id')
+            # gv = '''
+            # {1}  <i class="fa fa-info-circle" data-title="{0}" data-toggle="modal" data-target="#detail_teacher"></i>
+            # '''.format(khoa.ten, MyUser.objects.filter(id__in=ls_chi_tiet, position=1).count())
+            # hs = '''
+            # {1}  <i class="fa fa-info-circle" data-title="{0}" data-toggle="modal" data-target="#detail_student"></i>
+            # '''.format(khoa.ten, MyUser.objects.filter(id__in=ls_chi_tiet, position=0).count())
+            options = '''
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#new_nien_khoa" data-title="edit" id="edit_{0}">
+                        <i class="fa fa-cog" data-toggle="tooltip" title="Chỉnh sửa"></i>
+                    </button> 
+                    <button type="button" class="btn btn-danger" data-title="del" id="del_{0}">
+                        <i class="fa fa-trash" data-toggle="tooltip" title="Xóa"></i>
+                    </button> 
+                </div>
+            '''.format(khoa.id)
+            data.append([ten, nam, options])
+        big_data = {"data": data}
+        json_data = json.loads(json.dumps(big_data))
+        return JsonResponse(json_data)
+
+
+def manage_khoa(request):
+    user = request.user
+
+    content = {'username': mark_safe(json.dumps(user.username))}
+
+    if user.is_authenticated and user.position == 2:
+        if request.method == 'POST':
+            if 'delete' in request.POST:
+                Khoa.objects.get(id=request.POST['delete']).delete()
+            else:
+                if request.POST['kieu'] == 'new':
+                    try:
+                        Khoa.objects.create(ten_khoa=request.POST['khoa'], mo_ta=request.POST['mo_ta'])
+                    except:
+                        pass
+                else:
+                    nk = Khoa.objects.get(id=request.POST['id'])
+                    nk.ten_khoa = request.POST['khoa']
+                    nk.mo_ta = request.POST['mo_ta']
+                    nk.save()
+        return render(request, 'adminsc/manage_khoa.html', content)
+    else:
+        return HttpResponseRedirect('/')
+
+
+def manage_khoa_data(request):
+    user = request.user
+    if user.is_authenticated and user.position == 2:
+        data = []
+        for khoa in Khoa.objects.all():
+            ten = '<p id="ten_{}">{}</p>'.format(khoa.id, khoa.ten_khoa)
+            mo_ta = '<p id="mota_{}">{}</p>'.format(khoa.id, khoa.mo_ta)
+            # ls_chi_tiet = ChiTietLop.objects.filter(lop_id=khoa).values('myuser_id')
+            # gv = '''
+            # {1}  <i class="fa fa-info-circle" data-title="{0}" data-toggle="modal" data-target="#detail_teacher"></i>
+            # '''.format(khoa.ten, MyUser.objects.filter(id__in=ls_chi_tiet, position=1).count())
+            # hs = '''
+            # {1}  <i class="fa fa-info-circle" data-title="{0}" data-toggle="modal" data-target="#detail_student"></i>
+            # '''.format(khoa.ten, MyUser.objects.filter(id__in=ls_chi_tiet, position=0).count())
+            options = '''
+                <div class="btn-group">
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#new_khoa" data-title="edit" id="edit_{0}">
+                        <i class="fa fa-cog" data-toggle="tooltip" title="Chỉnh sửa"></i>
+                    </button> 
+                    <button type="button" class="btn btn-danger" data-title="del" id="del_{0}">
+                        <i class="fa fa-trash" data-toggle="tooltip" title="Xóa"></i>
+                    </button> 
+                </div>
+            '''.format(khoa.id)
+            data.append([ten, mo_ta, options])
         big_data = {"data": data}
         json_data = json.loads(json.dumps(big_data))
         return JsonResponse(json_data)

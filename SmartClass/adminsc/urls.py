@@ -15,6 +15,10 @@ urlpatterns = [
     path('manage_class/data', views.manage_class_data, name='manage_class_data'),
     path('manage_mon', views.manage_mon, name='manage_mon'),
     path('manage_mon/data', views.manage_mon_data, name='manage_mon_data'),
+    path('manage_nien_khoa', views.manage_nien_khoa, name='manage_nien_khoa'),
+    path('manage_nien_khoa_data', views.manage_nien_khoa_data, name='manage_nien_khoa_data'),
+    path('manage_khoa', views.manage_khoa, name='manage_khoa'),
+    path('manage_khoa_data', views.manage_khoa_data, name='manage_khoa_data'),
     path('profile', views.user_profile, name='profile'),
     path('logout', views.user_logout, name='logout'),
 ]

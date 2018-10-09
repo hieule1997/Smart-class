@@ -60,12 +60,18 @@ $(document).ready(function(){
             $("#new_class input[name=id]").val(id);
             var ten = $("#ten_"+id).text();
             $("#new_class input[name=ten]").val(ten);
+            var khoa = $("#khoa_"+id).text();
+            $("#new_class input[name=khoa]").val(khoa);
+            var nien_khoa = $("#nien_khoa_"+id).text();
+            $("#new_class input[name=nien_khoa]").val(nien_khoa);
             $('#change_class_title').html("Chỉnh sửa lớp")
             $("#save_new_class").html("Chỉnh sửa");
         }else{
             $("#new_class input[name=id]").val(0);
             $('#change_class_title').html("Tạo mới lớp")
             $("#new_class input[name=ten]").val("");
+            $("#new_class input[name=khoa]").val("");
+            $("#new_class input[name=nien_khoa]").val("");
             $("#save_new_class").html("Tạo mới");
         }
     });
@@ -75,10 +81,12 @@ $(document).ready(function(){
         var token = $("#new_class input[name=csrfmiddlewaretoken]").val();
         var ten = $("#new_class input[name=ten]").val();
         var id = $("#new_class input[name=id]").val();
+        var khoa = $("#new_class input[name=khoa]").val();
+        var nien_khoa = $("#new_class input[name=nien_khoa]").val();
         $.ajax({
             type:'POST',
             url:location.href,
-            data: {'csrfmiddlewaretoken':token, 'kieu':kieu, 'ten': ten, 'id':id},
+            data: {'csrfmiddlewaretoken':token, 'kieu':kieu, 'ten': ten, 'id':id , 'khoa':khoa, 'nien_khoa':nien_khoa},
             success: function(){
                 $("#new_class").modal("hide");
                 table_class.ajax.reload(null,false);

@@ -106,6 +106,29 @@ def mon(request, id):
         return redirect("/")
 
 
+def group_data(request, teacher):
+    user = request.user
+    if user.is_authenticated and user.position == 0:
+        html = ''
+        try:
+            lopOb = ChiTietLop.objects.get(myuser_id=user)
+            ls_nhom = ChiTietNhom.objects.filter(myuser_id=user).values('nhom_id')
+            nhom = Nhom.objects.filter(myuser_id=MyUser.objects.get(username=teacher), id__in=ls_nhom)
+            html += '''
+                <div class="mail_list" id="group_class">
+                <p hidden>'''+lopOb.lop_id.ten+teacher+nhom[0].ten_nhom+'''</p>
+                <p hidden>'''+nhom[0].ten_nhom+'''</p>
+                <div class="right">
+                    <h3>'''+nhom[0].ten_nhom+'''</h3>
+            '''
+            for std in ChiTietNhom.objects.filter(nhom_id=nhom[0]):
+                html += '''<p><i class="fa fa-user"></i> '''+std.myuser_id.fullname+'''</p>'''
+            html += '''</div></div>'''
+        except:
+            pass
+        return HttpResponse(html)
+
+
 def score_data(request):
     user = request.user
     if user.is_authenticated and user.position == 0:
